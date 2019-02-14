@@ -66,7 +66,8 @@ public class flashcard extends AppCompatActivity {
 
     public void showCard(){
         String text = cards.get(current_card).show();
-        text = text.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10));
+        // somehow " -" 's space gets deleted in XML, have to hardcode it in here
+        text = text.replaceAll(" -", Character.toString((char) 10) + (char)10);
         //needs more work;
         canvas.setText(text);
     }
