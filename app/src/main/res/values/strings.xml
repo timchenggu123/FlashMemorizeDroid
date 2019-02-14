@@ -3,4 +3,10 @@
     <string name="main_bttn">OpenFile</string>
     <string name="main_msg">Welcome! Press the button below to open a file.</string>
     <string name="new_line_keyword">-</string>
+    <string name="button_prev">PREV</string>
+    <string name="button_next">NEXT</string>
+    <string name="button_flip">FLIP</string>
+    <string name="button_good">GOOD</string>
+    <string name="button_bad">BAD</string>
+    <string name="text_view">Empty</string>
 </resources>

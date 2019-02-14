@@ -19,7 +19,12 @@ public class Deck {
         name = name_arg;
         cards = cards_arg;
         size = cards.size();
+
+        //initializing order
         order = new int[size];
+        for (int i = 0; i< order.length; i++){
+            order[i] = i;
+        }
 
     }
 
@@ -134,11 +139,11 @@ public class Deck {
 
     //public void append(self,cards){}
 
-    public Card[] getdeck(){
+    public List<Card> getDeck(){
         int nCards = order.length;
-        Card[] dk = new Card[nCards];
+        List<Card> dk = new ArrayList<>();
         for (int i = 0; i < nCards; i ++){
-            dk[i] = cards.get(i);
+            dk.add(cards.get(i));
         }
         return dk;
     }

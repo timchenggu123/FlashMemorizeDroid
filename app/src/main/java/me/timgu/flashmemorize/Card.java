@@ -4,7 +4,7 @@ import static java.lang.Math.abs;
 
 public class Card {
 
-    public int side;
+    public int side = 1;
     public int timesStudied = 0;
     public int timesCorrect = 0;
     public int viewed = 0;
@@ -52,6 +52,7 @@ public class Card {
             back = text;
         }
     }
+
 
     /*
     //The following are place holders for future implementations.

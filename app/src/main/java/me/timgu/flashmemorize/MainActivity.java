@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         StringBuilder stringBuilder = new StringBuilder();
         String line;
         while((line = reader.readLine()) != null){
+            line += (char) 10;
             stringBuilder.append(line);
         }
         reader.close();
