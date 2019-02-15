@@ -9,4 +9,5 @@
     <string name="button_good">GOOD</string>
     <string name="button_bad">BAD</string>
     <string name="text_view">Empty</string>
+    <string name="text_flip">" "</string>
 </resources>

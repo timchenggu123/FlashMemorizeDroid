@@ -1,5 +1,8 @@
 package me.timgu.flashmemorize;
 
+import android.widget.Toast;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +42,6 @@ public class Deck {
     #rndFlip<int> [0,1,2]: 0: all cards facing front; 1: all cards randomly flipped; 2: all cards facing back
     #set reset = 1 to reset deck in order with all cards facing front
      */
-        order = new int[size];
         if (reset == 1){
             for(int i = 0; i < cards.size(); i++){
                 cards.get(i).side = 1;
@@ -47,10 +49,38 @@ public class Deck {
             return;
         }
 
+        if (rndFlip == 0){
+            for (int i = 0; i < cards.size(); i ++){
+                cards.get(i).side = 1;
+            }
+        }else if (rndFlip == 1) {
+            for (int i = 0; i < cards.size(); i++){
+                int a = new Random().nextInt(2) + 1;
+                for (int j = 0; j < a; j++) cards.get(i).flip();
+            }
+        }else{
+            for (int i = 0; i < cards.size(); i++){
+                cards.get(i).side = 0;
+            }
+        }
+
         if (mode == 1){
-            Collections.shuffle(Arrays.asList(order));
+            List<Integer> temp = new ArrayList<>();
+            for(int i:order){
+                temp.add(i);
+            }
+            Collections.shuffle(temp);
+
+            int count = 0;
+            for (Integer i: temp){
+                order[count] = i;
+                count ++;
+            }
+
             return;
         }
+
+
 
         int ncards = order.length;
         int[] order2 = new int[ncards];
@@ -62,7 +92,7 @@ public class Deck {
         double temp = 0;
         int card = -1;
 
-        for (double a: accuracy) {
+        for (double a: accuracy){
             if (a == 0) {
                 a = 0.01; //set to 0.01 to avoid div0 error
             }
@@ -121,20 +151,7 @@ public class Deck {
             }
             order = order2;
         }
-        if (rndFlip == 0){
-            for (int i = 0; i < cards.size(); i ++){
-                cards.get(i).side = 1;
-            }
-        }else if (rndFlip == 1) {
-            for (int i = 0; i < cards.size(); i++){
-                int a = new Random().nextInt(2) + 1;
-                for (int j = 0; j < a; j++) cards.get(i).flip();
-            }
-        }else{
-            for (int i = 0; 9 < cards.size(); i++){
-                cards.get(i).side = 1;
-            }
-        }
+
     }
 
     //public void append(self,cards){}
@@ -142,7 +159,7 @@ public class Deck {
     public List<Card> getDeck(){
         int nCards = order.length;
         List<Card> dk = new ArrayList<>();
-        for (int i = 0; i < nCards; i ++){
+        for (int i:order){
             dk.add(cards.get(i));
         }
         return dk;

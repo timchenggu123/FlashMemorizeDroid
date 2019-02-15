@@ -1,10 +1,14 @@
 package me.timgu.flashmemorize;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +31,8 @@ public class flashcard extends AppCompatActivity {
 
         //assigning view element id
         canvas = findViewById(R.id.text_canvas);
+        Toolbar toolbar = findViewById(R.id.toolbar_flashcard);
+        setSupportActionBar(toolbar);
 
         //Receiving intent from main
         Intent intent = getIntent();
@@ -34,6 +40,12 @@ public class flashcard extends AppCompatActivity {
         dk = readTxtDeck(txtDeck);
         cards = dk.getDeck();
         showCard();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_flashcard,menu);
+        return true;
     }
 
     public Deck readTxtDeck(String deck){
@@ -114,6 +126,15 @@ public class flashcard extends AppCompatActivity {
 
     public void badCard(View view) {
         moveCurrentCard(1);
+        showCard();
+    }
+
+    public void shuffleCards(MenuItem item) {
+        //needs more work
+        dk.shuffle(1,1,0,0);
+        cards = dk.getDeck();
+        Toast.makeText(this,Integer.toString(cards.size()), Toast.LENGTH_SHORT).show();
+        current_card = 0;
         showCard();
     }
 }
