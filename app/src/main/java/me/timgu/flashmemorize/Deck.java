@@ -31,7 +31,7 @@ public class Deck {
 
     }
 
-    public void shuffle(int mode, int rndFlip, int reset, int draw){
+    public void shuffle(int mode, int reset, int draw){
     /*
 
     #Shuffle the deck. Mode = 1 shuffle a deck of ncards with every card included exactly once. All cards
@@ -42,26 +42,17 @@ public class Deck {
     #rndFlip<int> [0,1,2]: 0: all cards facing front; 1: all cards randomly flipped; 2: all cards facing back
     #set reset = 1 to reset deck in order with all cards facing front
      */
+        //re-initialize order
+        order = new int[size];
+        for (int i = 0; i< order.length; i++){
+            order[i] = i;
+        }
+        //end of re-initialize
         if (reset == 1){
             for(int i = 0; i < cards.size(); i++){
                 cards.get(i).side = 1;
             }
             return;
-        }
-
-        if (rndFlip == 0){
-            for (int i = 0; i < cards.size(); i ++){
-                cards.get(i).side = 1;
-            }
-        }else if (rndFlip == 1) {
-            for (int i = 0; i < cards.size(); i++){
-                int a = new Random().nextInt(2) + 1;
-                for (int j = 0; j < a; j++) cards.get(i).flip();
-            }
-        }else{
-            for (int i = 0; i < cards.size(); i++){
-                cards.get(i).side = 0;
-            }
         }
 
         if (mode == 1){
@@ -80,7 +71,7 @@ public class Deck {
             return;
         }
 
-
+        //the following code executes if mode == 0;
 
         int ncards = order.length;
         int[] order2 = new int[ncards];
@@ -119,6 +110,7 @@ public class Deck {
 
             while (!proceed){
                 int toss = new Random().nextInt(pool[pool.length-1]);
+
                 nth = -1;
                 for (int zone: pool){
                     nth = nth +1;
@@ -129,9 +121,9 @@ public class Deck {
                         order2[i] = nth;
                         temp = nth;
                         proceed = true;
+                        break;
                     }
                 }
-                proceed = true;
             }
 
             if (mode == 2){
@@ -140,7 +132,7 @@ public class Deck {
                 // The following code makes sure that the same card does not get drawn over and over again
                 if (last_card_drawn > -1){
                     if (last_card_drawn == nth){
-                        shuffle(mode, rndFlip,reset,draw);
+                        shuffle(mode,reset,draw);
                     }else{
                         last_card_drawn =  nth;
                     }
@@ -149,10 +141,32 @@ public class Deck {
                 }
                 break;
             }
-            order = order2;
-        }
 
+        }
+        order = order2;
     }
+
+    public void randomFlip(int mode){
+        //0: set all side to 1
+        //1: random flip
+        //2: set all side to 2
+        if (mode == 0){
+            for (int i = 0; i < cards.size(); i ++){
+                cards.get(i).side = 1;
+            }
+        }else if (mode == 1) {
+            for (int i = 0; i < cards.size(); i++){
+                int a = new Random().nextInt(2) + 1;
+                for (int j = 0; j < a; j++) cards.get(i).flip();
+            }
+        }else{
+            for (int i = 0; i < cards.size(); i++){
+                cards.get(i).side = 0;
+            }
+        }
+    }
+
+    public void randomFlip(){randomFlip(1);}
 
     //public void append(self,cards){}
 
