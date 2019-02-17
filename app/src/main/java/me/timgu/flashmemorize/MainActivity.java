@@ -11,7 +11,12 @@ import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -44,16 +49,36 @@ public class MainActivity extends AppCompatActivity {
     private String deckListFile = "me.timgu.decklist";
     //----------------------------------------------------
 
+    //Initiate RecyclerView
+    private RecyclerView mRecyclerView;
+    private MainListAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDeckList = getSharedPreferences(deckListFile,MODE_PRIVATE);
+
+        //initiate task bar
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+
+        //initiate recycler view
+        mRecyclerView = findViewById(R.id.main_recyclerview);
+        mAdapter = new MainListAdapter(this,mDeckList.getAll());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
     }
 
 
-    public void performFileSearch(View view){
+    public void performFileSearch(MenuItem item){
         Intent  intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
@@ -71,14 +96,9 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     //processing the uri to file
-                    String txtDeck = uri2Text(uri);
                     String deckName = getDeckName(uri);
-                    Deck dk = readTxtDeck(txtDeck,deckName);
-
                     String filename = mDeckList.getString(deckName,null);
-                    if (filename == null){
-                        addDeck(uri);
-                    }
+                    addDeck(uri);
                     mDeckList.getString(deckName,null);
 
                     if (filename != null) {

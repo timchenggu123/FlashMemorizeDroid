@@ -252,4 +252,5 @@ public class flashcard extends AppCompatActivity {
         current_card = 0;
         showCard();
     }
+
 }

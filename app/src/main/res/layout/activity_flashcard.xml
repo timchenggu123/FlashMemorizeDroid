@@ -13,7 +13,8 @@
         android:background="@color/design_default_color_primary"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AppTheme"
-        app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
+        app:titleTextColor="@android:color/white">
+    </android.support.v7.widget.Toolbar>
 
     <Button
         android:id="@+id/button_prev"

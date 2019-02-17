@@ -5,50 +5,50 @@
         android:id="@+id/menu_flashcard"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom|withText"
-        android:title="Shuffle">
+        android:title="@string/flashcard_shuffle">
         <menu
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto">
             <item
                 android:id="@+id/menu_shuffle"
-                android:title="Shuffle">
+                android:title="@string/flashcard_shuffle">
                 <menu
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto">
                     <item
                         android:id = "@+id/action_shuffle_no_repeat"
-                        android:title = "No Repeat"
+                        android:title = "@string/flashcard_no_repeat"
                         android:onClick="shuffleCardsNoRepeat">
 
                     </item>
                     <item
                         android:id = "@+id/action_shuffle_smart_learn"
-                        android:title = "Smart learn"
+                        android:title = "@string/flashcard_smart_learn"
                         android:onClick="shuffleCardsSmartLearn">
 
                     </item>
                     <item
                         android:id = "@+id/action_shuffle_random_flip"
-                        android:title = "Random Flip"
+                        android:title = "@string/flashcard_random_flip"
                         android:onClick="shuffleCardsRandomFlip">
 
                     </item>
                     <item
                         android:id = "@+id/action_shuffle_all_front"
-                        android:title = "Flip All Front"
+                        android:title = "@string/flashcard_flip_all_front"
                         android:onClick="shuffleCardsAllFront">
 
                     </item>
                     <item
                         android:id = "@+id/action_shuffle_all_back"
-                        android:title = "Flip All Back"
+                        android:title = "@string/flashcard_flip_all_back"
                         android:onClick="shuffleCardsAllBack">
 
                     </item>
 
                     <item
                         android:id = "@+id/action_shuffle_reset"
-                        android:title = "Reset Deck "
+                        android:title = "@string/flashcard_reset_deck"
                         android:onClick="shuffleCardsReset">
 
                     </item>

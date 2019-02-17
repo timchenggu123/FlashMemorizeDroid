@@ -10,4 +10,12 @@
     <string name="button_bad">BAD</string>
     <string name="text_view">Empty</string>
     <string name="text_flip">" "</string>
+    <string name="flashcard_no_repeat">No Repeat</string>
+    <string name="flashcard_smart_learn">Smart learn</string>
+    <string name="flashcard_random_flip">Random Flip</string>
+    <string name="flashcard_flip_all_front">Flip All Front</string>
+    <string name="flashcard_flip_all_back">Flip All Back</string>
+    <string name="flashcard_reset_deck">Reset Deck</string>
+    <string name="main_menu_open_deck">OpenDeck</string>
+    <string name="flashcard_shuffle">Shuffle</string>
 </resources>

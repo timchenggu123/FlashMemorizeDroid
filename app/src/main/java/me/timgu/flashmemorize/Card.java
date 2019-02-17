@@ -1,8 +1,10 @@
 package me.timgu.flashmemorize;
 
+import java.io.Serializable;
+
 import static java.lang.Math.abs;
 
-public class Card {
+public class Card implements Serializable {
 
     public int side = 1;
     public int timesStudied = 0;
