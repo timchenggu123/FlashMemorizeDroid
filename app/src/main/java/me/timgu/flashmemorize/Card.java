@@ -1,6 +1,8 @@
 package me.timgu.flashmemorize;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Math.abs;
 
@@ -14,7 +16,7 @@ public class Card implements Serializable {
     private String front;
     private String back;
     private int id ;
-    private double[] studyTrend ;
+    private List<Integer> studyTrend = new ArrayList<>();
     private boolean front_pic_exist = false;
     private boolean back_pic_exist = false;
 
@@ -55,7 +57,13 @@ public class Card implements Serializable {
         }
     }
 
+    public int getId(){
+        return id;
+    }
 
+    public void updateStudyTrend(int correct){
+        studyTrend.add(correct);
+    }
     /*
     //The following are place holders for future implementations.
 

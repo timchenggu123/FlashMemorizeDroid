@@ -11,10 +11,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck implements Serializable {
-    public List<Card> cards;
-    public int size;
-    public  int[] order;
+    private int size;
+    private  int[] order;
+
     public String name;
+    public List<Card> cards;
 
     private int last_card_drawn = -1;
     //Deck subdeck; //To be implemented in future
@@ -233,6 +234,9 @@ public class Deck implements Serializable {
     }
 
     public int getSize(){return getSize(true);}
+
+    public int[] getOrder(){return this.order;}
+
 
     //public void deleteCard(){};
 

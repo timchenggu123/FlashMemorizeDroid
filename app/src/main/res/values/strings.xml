@@ -18,4 +18,8 @@
     <string name="flashcard_reset_deck">Reset Deck</string>
     <string name="main_menu_open_deck">OpenDeck</string>
     <string name="flashcard_shuffle">Shuffle</string>
+    <string name="flashcard_display_id_field">ID:</string>
+    <string name="flashcard_display_id_value">0</string>
+    <string name="flash_card_display_totalcards_field">Total Cards:</string>
+    <string name="flashcard_display_totalcards_value">0/0</string>
 </resources>

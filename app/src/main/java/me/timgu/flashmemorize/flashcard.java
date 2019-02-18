@@ -1,5 +1,6 @@
 package me.timgu.flashmemorize;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -14,72 +15,70 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class flashcard extends AppCompatActivity {
     public List<Card> cards;
     public Deck dk;
     private TextView canvas;
-    private int current_card = 0;
+    private TextView flip;
+    private TextView id_display;
+    private TextView total_cards_display;
 
+    private int current_card = 0;
+    private LocalDecksManager mDecksManager;
+    private String filename;
+
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard);
 
-        //assigning view element id
-        canvas = findViewById(R.id.text_canvas);
+        //assigning toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_flashcard);
         setSupportActionBar(toolbar);
 
-        //setting onTouchEventListener for canvas
-        TextView canvas = findViewById(R.id.text_canvas);
-        TextView flip = findViewById(R.id.text_flip);
+        //initializing views
+        canvas = findViewById(R.id.text_canvas);
+        flip = findViewById(R.id.text_flip);
+        id_display = findViewById(R.id.flashcard_display_id_value);
+        total_cards_display = findViewById(R.id.flashcard_display_totalcards_value);
 
         //mPreference
 
 
         canvas.setOnTouchListener(new OnSwipeTouchListener(flashcard.this){
             public void onSwipeRight(){
-                nextCard();
-            }
-            public void onSwipeLeft(){
                 prevCard();
             }
+            public void onSwipeLeft(){ nextCard();}
             public void onTwoTaps(){
                 flipCard();
             }
         });
         flip.setOnTouchListener(new OnSwipeTouchListener(flashcard.this){
-            public void onSwipeRight(){
-                nextCard();
-            }
-            public void onSwipeLeft(){
-                prevCard();
-            }
-            public void onTwoTaps(){
-                flipCard();
-            }
+            public void onSwipeRight(){prevCard();}
+            public void onSwipeLeft(){nextCard();}
+            public void onTwoTaps(){ flipCard(); }
         });
         //Receiving intent from main
         Intent intent = getIntent();
-        String filename = intent.getStringExtra(MainActivity.EXTRA_FILENAME);
+        filename = intent.getStringExtra(MainActivity.EXTRA_FILENAME);
 
+        //initializing LocalDecksManager
+        mDecksManager = new LocalDecksManager(this);
         try {
-            dk = loadDeck(filename);
+            dk = mDecksManager.loadDeck(filename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         cards = dk.getDeck();
         showCard();
+        showDeckStats();
     }
 
     @Override
@@ -88,63 +87,14 @@ public class flashcard extends AppCompatActivity {
         return true;
     }
 
-    private Deck loadDeck(String filename) throws FileNotFoundException {
-        FileInputStream inputStream;
-        Deck deck = null;
-        if (filename != null){
-            inputStream = openFileInput(filename);
-
-            ObjectInput in = null;
-            try {
-                in = new ObjectInputStream(inputStream);
-                deck = (Deck) in.readObject();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (in != null) {
-                        in.close();
-                    }
-                } catch (IOException ex) {
-                    // ignore close exception
-                }
-            }
-        }else{
-            return null;
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            mDecksManager.saveDeckToLocal(dk,filename);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        return deck;
-    }
-
-    public Deck readTxtDeck(String deck){
-        Scanner scanner = new Scanner(deck);
-        String line;
-        boolean b;
-        int indx;
-        String front;
-        String back;
-        int ID = 0;
-        List<Card> all_cards = new ArrayList<>();
-
-        while(scanner.hasNextLine()){
-            line = scanner.nextLine();
-            indx = line.indexOf((char) 9);
-            if (indx >=0){
-                front = line.substring(0,indx);
-                back = line.substring(indx+1); //will this work?
-
-                //front = front.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10)); //will this work?
-                //back = back.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10)); //will this work?
-
-                all_cards.add(new Card(front,back,ID));
-                ID ++;
-            }
-        }
-        Deck dk = new Deck("default_name",all_cards); //needs change name
-        return dk;
     }
 
     public void showCard(){
@@ -160,22 +110,53 @@ public class flashcard extends AppCompatActivity {
         It is how we can navigate through the deck;
          */
         //needs more work;
-        int nCards = dk.size;
+        int nCards = dk.getSize();
         current_card = current_card + step;
-        Toast.makeText(this, Integer.toString(current_card), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, Integer.toString(current_card), Toast.LENGTH_SHORT).show();
         if (current_card == nCards){
             current_card = 0;
-            Toast.makeText(this, "Reached End of Deck", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Reached End of Deck", Toast.LENGTH_SHORT).show();
 
         }else if (current_card < 0){
-            current_card = dk.size - 1;
-            Toast.makeText(this, "Reached Beginning of Deck", Toast.LENGTH_SHORT).show();
+            current_card = dk.getSize() - 1;
+            //Toast.makeText(this, "Reached Beginning of Deck", Toast.LENGTH_SHORT).show();
 
         }
     }
 
+    public void updateDeckStats(int correct) {
+        //The reason [int correct] here is an int not a bool is for future implementation of different levels of correctness
+        //Right now [int correct] should be either 0 or 1;
+
+        if (this.current_card == dk.getSize()) {
+            current_card = current_card - 1; //why again? don't remember, just copied over...
+        }
+
+        int curId = cards.get(current_card).getId(); //gets the id of the card currently on display
+
+        dk.cards.get(curId).timesStudied ++;
+        dk.cards.get(curId).timesCorrect += correct;
+        dk.cards.get(curId).updateStudyTrend(correct);
+
+        showDeckStats();
+    }
+
+    public void showDeckStats(){
+        int curId = cards.get(current_card).getId(); //gets the id of the card currently on display
+        int deckSize = dk.getSize();
+
+        String dispId = String.valueOf(curId + 1);//+1 here because current_card starts from 0
+        String dispTotalCards =
+                String.valueOf(current_card) + '/' + String.valueOf(deckSize);
+
+        id_display.setText(dispId);
+        total_cards_display.setText(dispTotalCards);
+
+    }
+
     public void prevCard(){
         moveCurrentCard(-1);
+        showDeckStats();
         showCard();
     }
 
@@ -185,6 +166,7 @@ public class flashcard extends AppCompatActivity {
 
     public void nextCard() {
         moveCurrentCard(1);
+        showDeckStats();
         showCard();
     }
     public void nextCard(View view) {
@@ -200,11 +182,13 @@ public class flashcard extends AppCompatActivity {
     }
 
     public void goodCard(View view) {
+        updateDeckStats(1);
         moveCurrentCard(1);
         showCard();
     }
 
     public void badCard(View view) {
+        updateDeckStats(0);
         moveCurrentCard(1);
         showCard();
     }

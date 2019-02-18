@@ -13,7 +13,8 @@
         android:background="@color/design_default_color_primary"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AppTheme"
-        app:titleTextColor="@android:color/white">
+        app:titleTextColor="@android:color/white"
+        tools:layout_editor_absoluteX="0dp">
     </android.support.v7.widget.Toolbar>
 
     <Button
@@ -68,26 +69,27 @@
     <ScrollView
         android:id="@+id/scrollView3"
         android:layout_width="0dp"
-        android:layout_height="593dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/button_good"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_flashcard"
-        app:layout_constraintVertical_bias="0.0">
+        android:background="@drawable/border_rectangle">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="206dp">
+            tools:layout_editor_absoluteY="206dp"
+            >
 
             <TextView
                 android:id="@+id/text_canvas"
@@ -99,18 +101,17 @@
                 android:layout_marginRight="8dp"
                 android:onClick="flipCard"
                 android:text="@string/text_view"
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_flip"
                 android:layout_width="match_parent"
-                android:layout_height="652dp"
+                android:layout_height="552dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
@@ -120,17 +121,80 @@
                 android:onClick="flipCard"
                 android:text="@string/text_flip"
                 android:textAlignment="center"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Double Tap to Flip" />
         </LinearLayout>
 
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/flashcard_dispay_id_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/flashcard_display_id_field"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_flashcard" />
+
+    <TextView
+        android:id="@+id/flashcard_display_id_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="bottom"
+        android:text="@string/flashcard_display_id_value"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toStartOf="@+id/flash_card_display_totalcards_field"
+        app:layout_constraintStart_toEndOf="@+id/flashcard_dispay_id_field"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_flashcard" />
+
+    <TextView
+        android:id="@+id/flash_card_display_totalcards_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/flash_card_display_totalcards_field"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintLeft_toRightOf="@id/flashcard_display_id_value"
+        app:layout_constraintRight_toLeftOf="@id/flashcard_display_totalcards_value"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_flashcard"
+        app:layout_constraintVertical_bias="0.509" />
+
+    <TextView
+        android:id="@+id/flashcard_display_totalcards_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/flashcard_display_totalcards_value"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.285"
+        app:layout_constraintStart_toEndOf="@+id/flash_card_display_totalcards_field"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_flashcard" />
 
 
 </android.support.constraint.ConstraintLayout>

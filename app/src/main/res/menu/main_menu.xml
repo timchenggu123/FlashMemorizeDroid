@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_flashcard"
+        android:id="@+id/menu_main"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom|withText"
         android:title="@string/main_menu_open_deck"
