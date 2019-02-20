@@ -1,5 +1,9 @@
 package me.timgu.flashmemorize;
 
+import android.graphics.Bitmap;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +24,31 @@ public class Card implements Serializable {
     private boolean front_pic_exist = false;
     private boolean back_pic_exist = false;
 
+    private SerialBitmap front_pic;
+    private SerialBitmap back_pic;
 
-    public Card (String front_arg, String back_arg, int ID_arg){
+    public Card (String front_arg, String back_arg, int ID_arg, File front_pic_file, File back_pic_file){
         front = front_arg;
         back = back_arg;
         id = ID_arg;
+
+        if (front_pic_file != null && front_pic_file.exists()){
+            this.front_pic = new SerialBitmap(front_pic_file);
+        }else{
+            this.front_pic = null;
+        }
+
+        if (back_pic_file != null && back_pic_file.exists()){
+            this.back_pic = new SerialBitmap(back_pic_file);
+        }else{
+            this.back_pic = null;
+        }
+    }
+
+    //TODO: implement compatibility constructor
+    public Card(Object card){
+        //for compatibility purposes
+
     }
 
     public void flip(){
@@ -37,6 +61,15 @@ public class Card implements Serializable {
         }else{
             return back;
         }
+    }
+
+    public Bitmap showImage(){
+        if (side == 1 && front_pic != null){
+            return front_pic.bitmap;
+        }else if(side == 0 && back_pic != null){
+            return back_pic.bitmap;
+        }
+        return null;
     }
 
     public double getStats(){

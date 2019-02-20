@@ -5,11 +5,13 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,9 +35,13 @@ public class LocalDecksManager {
 
     public LocalDecksManager(Context context){
         this.context = context;
-        mDeckList = context.getSharedPreferences(deckListFile, Context.MODE_PRIVATE);
+
     }
 
+    public SharedPreferences getDeckList(){
+        mDeckList = context.getSharedPreferences(deckListFile, Context.MODE_PRIVATE);
+        return mDeckList;
+    }
     private String uri2Text(Uri uri) throws IOException {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -49,27 +55,53 @@ public class LocalDecksManager {
         return stringBuilder.toString();
     }
 
-    public Deck readTxtDeck(String deck,String name){
+    public Deck readTxtDeck(String deck,String name,Uri uri){
         Scanner scanner = new Scanner(deck);
         String line;
-        boolean b;
         int indx;
+        String str = uri.getPath();
+        File f = new File(str);
+        f = f.getParentFile();
+        String parentFolder = f.toString();
+        parentFolder = parentFolder.replaceAll("/document/raw:","");
+
+
+
         String front;
         String back;
         int ID = 0;
         List<Card> all_cards = new ArrayList<>();
+
 
         while(scanner.hasNextLine()){
             line = scanner.nextLine();
             indx = line.indexOf((char) 9);
             if (indx >=0){
                 front = line.substring(0,indx);
-                back = line.substring(indx+1); //will this work?
+
+                File front_pic_file = null;
+                int bracket1 = front.indexOf("{");
+                int bracket2 = front.indexOf("}");
+                if (bracket1 >= 0 && bracket2 >= 0){
+                    String file = front.substring(bracket1 + 1, bracket2);
+                    file = parentFolder + "/" + file;
+                    front_pic_file = new File(file);
+                }
+
+                File back_pic_file = null;
+                back = line.substring(indx+1);
+                bracket1 = back.indexOf("{");
+                bracket2 = back.indexOf("}");
+                if (bracket1 >= 0 && bracket2 >= 0){
+                    String file = back.substring(bracket1 + 1, bracket2);
+                    file = parentFolder + "/" + file;
+                    back_pic_file = new File(file);
+                }
 
                 //front = front.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10)); //will this work?
                 //back = back.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10)); //will this work?
 
-                all_cards.add(new Card(front,back,ID));
+                all_cards.add(new Card(front,back,ID,front_pic_file,back_pic_file));
                 ID ++;
             }
         }
@@ -141,14 +173,24 @@ public class LocalDecksManager {
         String deckName = getDeckName(uri);
         String filename = deckName + ".adk";
         String textDeck = uri2Text(uri);
-        Deck deck = readTxtDeck(textDeck,deckName);
+        Deck deck = readTxtDeck(textDeck,deckName, uri);
 
-        SharedPreferences.Editor mDeckListEditor = mDeckList.edit();
+        SharedPreferences.Editor mDeckListEditor = getDeckList().edit();
 
         mDeckListEditor.putString(deckName,filename);
         mDeckListEditor.apply();
 
         saveDeckToLocal(deck,filename);
+    }
+
+    public void removeDeck(String deckName){
+        String filename = getDeckList().getString(deckName,null);
+        SharedPreferences.Editor mDeckListEditor = getDeckList().edit();
+        mDeckListEditor.remove(deckName);
+        mDeckListEditor.apply();
+        File dir = context.getFilesDir();
+        File file = new File(dir, filename);
+        file.delete();
     }
 
     public Deck loadDeck(String filename) throws FileNotFoundException {

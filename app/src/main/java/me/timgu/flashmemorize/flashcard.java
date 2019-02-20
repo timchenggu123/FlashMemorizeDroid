@@ -3,6 +3,8 @@ package me.timgu.flashmemorize;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ public class flashcard extends AppCompatActivity {
     private TextView flip;
     private TextView id_display;
     private TextView total_cards_display;
+    private ImageView image_display;
 
     private int current_card = 0;
     private LocalDecksManager mDecksManager;
@@ -47,7 +51,7 @@ public class flashcard extends AppCompatActivity {
         flip = findViewById(R.id.text_flip);
         id_display = findViewById(R.id.flashcard_display_id_value);
         total_cards_display = findViewById(R.id.flashcard_display_totalcards_value);
-
+        image_display = findViewById(R.id.flashcard_image_display);
         //mPreference
 
 
@@ -98,11 +102,23 @@ public class flashcard extends AppCompatActivity {
     }
 
     public void showCard(){
+        //displaying text information
         String text = cards.get(current_card).show();
         // somehow " -" 's space gets deleted in XML, have to hardcode it in here
         text = text.replaceAll(" -", Character.toString((char) 10) + (char)10);
         //needs more work;
         canvas.setText(text);
+
+        //displaying image
+        if(cards.get(current_card).showImage() != null) {
+            image_display.setImageBitmap(
+                    cards.get(current_card).showImage());
+        }else{
+            Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.border_rectangle);
+            image_display.setImageBitmap(bm);
+        }
+        //updating deck stats;
+        showDeckStats();
     }
 
     public void moveCurrentCard(int step){
@@ -156,7 +172,6 @@ public class flashcard extends AppCompatActivity {
 
     public void prevCard(){
         moveCurrentCard(-1);
-        showDeckStats();
         showCard();
     }
 
@@ -166,7 +181,6 @@ public class flashcard extends AppCompatActivity {
 
     public void nextCard() {
         moveCurrentCard(1);
-        showDeckStats();
         showCard();
     }
     public void nextCard(View view) {

@@ -10,7 +10,9 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,32 +25,51 @@ public class MainListAdapter extends
     private LayoutInflater mInflater;
     public static final String EXTRA_FILENAME =
             "me.timgu.flashmemorize.extra.FILENAME";
+    private Context context;
 
     public MainListAdapter(Context context, Map<String,?> deckList){
         mInflater = LayoutInflater.from(context); //what the heck does this mean?\
         this.mDeckListKeys= new ArrayList<> (deckList.keySet());
         this.mDeckListValues= new ArrayList<>(deckList.values());
+        this.context = context;
     }
 
 
     class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final TextView wordItemView;
+        public final Button deleteButton;
         final MainListAdapter mAdapter;
 
         public ItemViewHolder(View itemView, MainListAdapter adapter){
             super(itemView);
-            wordItemView = itemView.findViewById(R.id.main_list_item);
+            wordItemView = itemView.findViewById(R.id.main_list_text);
+            deleteButton = itemView.findViewById(R.id.main_list_delete);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
+            deleteButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+
             int mPosition = getLayoutPosition();
-            String filename = (String) mDeckListValues.get(mPosition);
-            Intent intent = new Intent(v.getContext(),flashcard.class);
-            intent.putExtra(EXTRA_FILENAME,filename);
-            v.getContext().startActivity(intent);
+
+            if (v.getId() == R.id.main_list_delete){
+                LocalDecksManager ldm = new LocalDecksManager(context);
+                String deckName = mDeckListKeys.get(mPosition);
+                ldm.removeDeck(deckName);
+
+                mDeckListKeys.remove(mPosition);
+                mDeckListValues.remove(mPosition);
+
+                notifyDataSetChanged();
+            }else{
+                String filename = (String) mDeckListValues.get(mPosition);
+                Intent intent = new Intent(v.getContext(),flashcard.class);
+                intent.putExtra(EXTRA_FILENAME,filename);
+                Toast.makeText(context, "Loading Deck...", Toast.LENGTH_SHORT).show();
+                v.getContext().startActivity(intent);
+            }
         }
     }
     @NonNull
@@ -70,7 +91,10 @@ public class MainListAdapter extends
         return count;
     }
 
-    public void updateDeckList(Map<String,?> deckList){
+    public void updateDeckList(){
+        LocalDecksManager ldm = new LocalDecksManager(context);
+        Map<String,?> deckList = ldm.getDeckList().getAll();
+
         this.mDeckListKeys= new ArrayList<> (deckList.keySet());
         this.mDeckListValues= new ArrayList<>(deckList.values());
         this.notifyDataSetChanged();//can be more specific, but this is safest
