@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -34,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Declare helper classes
     private LocalDecksManager mDecksManager;
+
+    //Declare reference constants
+    private boolean editMode = true;
 
 
     @Override
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void performFileSearch(MenuItem item){
+    public void performFileSearch(View v){
         requestPermission();
         Intent  intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -95,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void editDeckList(MenuItem item) {
+        mAdapter.editDeckList(editMode);
+        editMode = !editMode;
     }
 
     private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {

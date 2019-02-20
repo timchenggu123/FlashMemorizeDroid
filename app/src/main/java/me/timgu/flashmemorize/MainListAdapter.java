@@ -26,12 +26,18 @@ public class MainListAdapter extends
     public static final String EXTRA_FILENAME =
             "me.timgu.flashmemorize.extra.FILENAME";
     private Context context;
+    private Boolean editMode =false;
 
     public MainListAdapter(Context context, Map<String,?> deckList){
         mInflater = LayoutInflater.from(context); //what the heck does this mean?\
         this.mDeckListKeys= new ArrayList<> (deckList.keySet());
         this.mDeckListValues= new ArrayList<>(deckList.values());
         this.context = context;
+    }
+
+    public void editDeckList(Boolean editMode) {
+        this.editMode = editMode;
+        notifyDataSetChanged();
     }
 
 
@@ -46,6 +52,8 @@ public class MainListAdapter extends
             deleteButton = itemView.findViewById(R.id.main_list_delete);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
+
+            deleteButton.setVisibility(View.GONE);
             deleteButton.setOnClickListener(this);
         }
 
@@ -83,6 +91,13 @@ public class MainListAdapter extends
     public void onBindViewHolder(@NonNull MainListAdapter.ItemViewHolder itemViewHolder, int i) {
         String mCurrent = (String) mDeckListKeys.get(i);
         itemViewHolder.wordItemView.setText(mCurrent);
+
+        if (editMode){
+            itemViewHolder.deleteButton.setVisibility(View.VISIBLE);
+            itemViewHolder.deleteButton.setOnClickListener(itemViewHolder);
+        } else{
+            itemViewHolder.deleteButton.setVisibility(View.GONE);
+        }
     }
 
     @Override

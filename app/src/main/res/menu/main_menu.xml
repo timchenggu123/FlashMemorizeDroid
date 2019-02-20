@@ -2,11 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_main"
+        android:id="@+id/menu_main_edit"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="ifRoom|withText"
-        android:title="@string/main_menu_open_deck"
-        android:onClick="performFileSearch">
+        android:title="@string/main_menu_open_deck">
+        <menu xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+              <item
+                android:id ="@+id/menu_main_edit_delete"
+                app:showAsAction="ifRoom|withText"
+                android:title = "@string/menu_main_edit_delete"
+                android:onClick="editDeckList">
+
+             </item>
+
+        </menu>
     </item>
 
 </menu>
