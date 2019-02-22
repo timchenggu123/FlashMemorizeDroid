@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
             "me.timgu.flashmemorize.extra.FILENAME";
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS =
             66;
+
     //Declare RecyclerView
     private RecyclerView mRecyclerView;
     private MainListAdapter mAdapter;
@@ -57,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mAdapter.flashcard_launched = false;
+    }
+
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main_menu,menu);

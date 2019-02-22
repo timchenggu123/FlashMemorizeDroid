@@ -27,6 +27,7 @@ public class MainListAdapter extends
             "me.timgu.flashmemorize.extra.FILENAME";
     private Context context;
     private Boolean editMode =false;
+    public Boolean flashcard_launched = false;
 
     public MainListAdapter(Context context, Map<String,?> deckList){
         mInflater = LayoutInflater.from(context); //what the heck does this mean?\
@@ -71,11 +72,13 @@ public class MainListAdapter extends
                 mDeckListValues.remove(mPosition);
 
                 notifyDataSetChanged();
-            }else{
+            }else if (!flashcard_launched){
                 String filename = (String) mDeckListValues.get(mPosition);
                 Intent intent = new Intent(v.getContext(),flashcard.class);
                 intent.putExtra(EXTRA_FILENAME,filename);
                 Toast.makeText(context, "Loading Deck...", Toast.LENGTH_SHORT).show();
+
+                flashcard_launched = true; //to prevent flashcard_launched being called twice
                 v.getContext().startActivity(intent);
             }
         }

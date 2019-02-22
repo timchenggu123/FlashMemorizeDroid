@@ -163,7 +163,7 @@ public class flashcard extends AppCompatActivity {
 
         String dispId = String.valueOf(curId + 1);//+1 here because current_card starts from 0
         String dispTotalCards =
-                String.valueOf(current_card) + '/' + String.valueOf(deckSize);
+                String.valueOf(current_card+1) + '/' + String.valueOf(deckSize);
 
         id_display.setText(dispId);
         total_cards_display.setText(dispTotalCards);
