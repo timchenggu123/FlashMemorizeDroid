@@ -23,4 +23,8 @@
     <string name="flash_card_display_totalcards_field">Total Cards:</string>
     <string name="flashcard_display_totalcards_value">0/0</string>
     <string name="menu_main_edit_delete">Edit List</string>
+    <string name="flashcard_menu_stats">Current Card Stats</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

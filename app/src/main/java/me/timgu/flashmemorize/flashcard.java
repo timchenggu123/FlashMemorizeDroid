@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,7 @@ import java.util.List;
 public class flashcard extends AppCompatActivity {
     public List<Card> cards;
     public Deck dk;
+
     private TextView canvas;
     private TextView flip;
     private TextView id_display;
@@ -55,19 +57,31 @@ public class flashcard extends AppCompatActivity {
         //mPreference
 
 
-        canvas.setOnTouchListener(new OnSwipeTouchListener(flashcard.this){
-            public void onSwipeRight(){
+        canvas.setOnTouchListener(new OnSwipeTouchListener(flashcard.this) {
+            public void onSwipeRight() {
                 prevCard();
             }
-            public void onSwipeLeft(){ nextCard();}
-            public void onTwoTaps(){
+
+            public void onSwipeLeft() {
+                nextCard();
+            }
+
+            public void onTwoTaps() {
                 flipCard();
             }
         });
-        flip.setOnTouchListener(new OnSwipeTouchListener(flashcard.this){
-            public void onSwipeRight(){prevCard();}
-            public void onSwipeLeft(){nextCard();}
-            public void onTwoTaps(){ flipCard(); }
+        flip.setOnTouchListener(new OnSwipeTouchListener(flashcard.this) {
+            public void onSwipeRight() {
+                prevCard();
+            }
+
+            public void onSwipeLeft() {
+                nextCard();
+            }
+
+            public void onTwoTaps() {
+                flipCard();
+            }
         });
         //Receiving intent from main
         Intent intent = getIntent();
@@ -86,8 +100,8 @@ public class flashcard extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_flashcard,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_flashcard, menu);
         return true;
     }
 
@@ -95,33 +109,33 @@ public class flashcard extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         try {
-            mDecksManager.saveDeckToLocal(dk,filename);
+            mDecksManager.saveDeckToLocal(dk, filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void showCard(){
+    public void showCard() {
         //displaying text information
         String text = cards.get(current_card).show();
         // somehow " -" 's space gets deleted in XML, have to hardcode it in here
-        text = text.replaceAll(" -", Character.toString((char) 10) + (char)10);
+        text = text.replaceAll(" -", Character.toString((char) 10) + (char) 10);
         //needs more work;
         canvas.setText(text);
 
         //displaying image
-        if(cards.get(current_card).showImage() != null) {
+        if (cards.get(current_card).showImage() != null) {
             image_display.setImageBitmap(
                     cards.get(current_card).showImage());
-        }else{
-            Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.border_rectangle);
+        } else {
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.border_rectangle);
             image_display.setImageBitmap(bm);
         }
         //updating deck stats;
         showDeckStats();
     }
 
-    public void moveCurrentCard(int step){
+    public void moveCurrentCard(int step) {
         /*this is a mutator that changes the current_card variable;
         It is how we can navigate through the deck;
          */
@@ -129,11 +143,11 @@ public class flashcard extends AppCompatActivity {
         int nCards = dk.getSize();
         current_card = current_card + step;
         //Toast.makeText(this, Integer.toString(current_card), Toast.LENGTH_SHORT).show();
-        if (current_card == nCards){
+        if (current_card == nCards) {
             current_card = 0;
             //Toast.makeText(this, "Reached End of Deck", Toast.LENGTH_SHORT).show();
 
-        }else if (current_card < 0){
+        } else if (current_card < 0) {
             current_card = dk.getSize() - 1;
             //Toast.makeText(this, "Reached Beginning of Deck", Toast.LENGTH_SHORT).show();
 
@@ -150,27 +164,29 @@ public class flashcard extends AppCompatActivity {
 
         int curId = cards.get(current_card).getId(); //gets the id of the card currently on display
 
-        dk.cards.get(curId).timesStudied ++;
+        dk.cards.get(curId).timesStudied++;
         dk.cards.get(curId).timesCorrect += correct;
         dk.cards.get(curId).updateStudyTrend(correct);
 
         showDeckStats();
     }
 
-    public void showDeckStats(){
+
+    public void showDeckStats() {
         int curId = cards.get(current_card).getId(); //gets the id of the card currently on display
         int deckSize = dk.getSize();
 
         String dispId = String.valueOf(curId + 1);//+1 here because current_card starts from 0
         String dispTotalCards =
-                String.valueOf(current_card+1) + '/' + String.valueOf(deckSize);
+                String.valueOf(current_card + 1) + '/' + String.valueOf(deckSize);
 
         id_display.setText(dispId);
         total_cards_display.setText(dispTotalCards);
 
     }
 
-    public void prevCard(){
+
+    public void prevCard() {
         moveCurrentCard(-1);
         showCard();
     }
@@ -183,14 +199,16 @@ public class flashcard extends AppCompatActivity {
         moveCurrentCard(1);
         showCard();
     }
+
     public void nextCard(View view) {
         nextCard();
     }
 
-    public void flipCard(){
+    public void flipCard() {
         cards.get(current_card).flip();
         showCard();
     }
+
     public void flipCard(View view) {
         flipCard();
     }
@@ -245,7 +263,7 @@ public class flashcard extends AppCompatActivity {
     }
 
     public void shuffleCardsReset(MenuItem item) {
-        dk.shuffle(0,1,0);
+        dk.shuffle(0, 1, 0);
         cards = dk.getDeck();
         current_card = 0;
         showCard();
