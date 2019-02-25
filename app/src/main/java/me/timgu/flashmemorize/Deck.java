@@ -32,8 +32,15 @@ public class Deck implements Serializable {
         }
 
     }
-
     public void shuffle(int mode, int reset, int draw){
+        shuffle(0,0,0,cards.size());
+    }
+
+    public void smartShuffle(int n_cards){
+        shuffle(0,0,0,n_cards);
+    }
+
+    public void shuffle(int mode, int reset, int draw, int n_cards){
     /*
 
     #Shuffle the deck. Mode = 1 shuffle a deck of ncards with every card included exactly once. All cards
@@ -42,8 +49,20 @@ public class Deck implements Serializable {
 
     #allCards<int/logical> [0,1]: 1 then the deck is shuffled such that all cards are included at least once
     #rndFlip<int> [0,1,2]: 0: all cards facing front; 1: all cards randomly flipped; 2: all cards facing back
+    #n_cards determines how many cards to shuffle
+
     #set reset = 1 to reset deck in order with all cards facing front
      */
+        //before shuffle begins, first reset all viewed stats
+        //This was originally not a problem in Python but, since Java passes objects
+        //by reference there is now a need to reset viewed.
+        if (draw == 0){
+            for (Card c: cards){
+                c.viewed = 0;
+            }
+        }
+        size = n_cards;
+
         //re-initialize order
         order = new int[size];
         for (int i = 0; i< order.length; i++){

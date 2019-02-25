@@ -27,4 +27,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="flashcard_dialog_number">Enter a number 0-500</string>
+    <string name="flashcard_dialog_title">Number of Cards</string>
+    <string name="cancel">CANCEL</string>
+    <string name="confirm">CONFIRM</string>
 </resources>

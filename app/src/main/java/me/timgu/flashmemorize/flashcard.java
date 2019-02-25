@@ -3,12 +3,14 @@ package me.timgu.flashmemorize;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +31,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public class flashcard extends AppCompatActivity {
+public class flashcard extends AppCompatActivity
+                implements  FlashcardDialogFragment.FlashcardDialogListener{
     public List<Card> cards;
     public Deck dk;
 
@@ -139,6 +142,8 @@ public class flashcard extends AppCompatActivity {
             image_display.setImageBitmap(bm);
         }
         //updating deck stats;
+
+        cards.get(current_card).viewed = 1;
         showDeckStats();
     }
 
@@ -241,12 +246,28 @@ public class flashcard extends AppCompatActivity {
     }
 
     public void shuffleCardsSmartLearn(MenuItem item) {
-        dk.shuffle(0, 0, 0);
+        DialogFragment dialog = new FlashcardDialogFragment();
+        dialog.show(getSupportFragmentManager(),"flashcard_dialog");
+    }
+
+    public void shuffleCardsSmartLearn(int n_cards){
+        dk.smartShuffle(n_cards);
         cards = dk.getDeck();
-        current_card = 0;
         showCard();
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog,String msg) {
+        if (!msg.equals("")) {
+            shuffleCardsSmartLearn(Integer.valueOf(msg));
+        }
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        dialog.dismiss();
+    }
 
     public void shuffleCardsRandomFlip(MenuItem item) {
         dk.randomFlip();
@@ -288,7 +309,7 @@ public class flashcard extends AppCompatActivity {
         );
 
         if (Build.VERSION.SDK_INT >= 21){
-            stats_popupWindow.setElevation(5.0f);
+            stats_popupWindow.setElevation(10.0f);
         }
 
         ImageButton closeButton =
@@ -309,7 +330,7 @@ public class flashcard extends AppCompatActivity {
         String deck_total_studied  =
                 "Deck Total Times Studied: " + String.valueOf((int) deck_stats[1]);
         String deck_total_viewed =
-                "Cards Viewed after shuffle: "+String.valueOf((int) deck_stats[2])
+                "Unique Cards Viewed After Shuffle: "+String.valueOf((int) deck_stats[2])
                         + "/" + String.valueOf(dk.getSize(false));
 
         String txt = card_accuracy + (char) 10
@@ -332,4 +353,6 @@ public class flashcard extends AppCompatActivity {
         stats_popupWindow.showAtLocation(parent, Gravity.CENTER,0,0);
 
     }
+
+
 }

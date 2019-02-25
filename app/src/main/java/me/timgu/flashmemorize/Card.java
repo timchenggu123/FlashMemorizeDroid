@@ -55,7 +55,7 @@ public class Card implements Serializable {
         side = abs(side -1);
     }
 
-    public String show(){
+    public String show(){       
         if (side == 1){
             return front;
         }else{
