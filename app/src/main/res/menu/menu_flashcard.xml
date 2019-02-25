@@ -57,18 +57,9 @@
             <item
                 android:id="@+id/menu_stats"
                 app:showAsAction="ifRoom|withText"
-                android:title="@string/flashcard_menu_stats">
-                <menu
-                    android:id = "@+id/flashcards_menu_stats"
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto">
-                    <item
-                        android:id = "@+id/flashcard_menu_stats_card"
-                        android:title = "@string/flashcard_reset_deck">
+                android:title="Study Stats"
+                android:onClick="currentCardStats">
 
-                    </item>
-
-                </menu>
             </item>
         </menu>
 

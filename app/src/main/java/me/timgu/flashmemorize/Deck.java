@@ -197,7 +197,7 @@ public class Deck implements Serializable {
         }
 
         if (totalStudied == 0){
-            accuracy = 0;
+            accuracy = 1.0;
         }else{
             accuracy = 1.0*totalCorrect/totalStudied;
         }

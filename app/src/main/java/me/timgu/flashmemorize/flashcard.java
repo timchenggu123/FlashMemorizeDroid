@@ -2,20 +2,26 @@ package me.timgu.flashmemorize;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.ActionBar;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +38,7 @@ public class flashcard extends AppCompatActivity {
     private TextView id_display;
     private TextView total_cards_display;
     private ImageView image_display;
+    private PopupWindow stats_popupWindow;
 
     private int current_card = 0;
     private LocalDecksManager mDecksManager;
@@ -269,4 +276,60 @@ public class flashcard extends AppCompatActivity {
         showCard();
     }
 
+    public void currentCardStats(MenuItem item) {
+        LayoutInflater inflater =
+                (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View stats_popup = inflater.inflate(R.layout.flashcard_stats_popup,null);
+        stats_popupWindow = new PopupWindow(
+                stats_popup,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+
+        );
+
+        if (Build.VERSION.SDK_INT >= 21){
+            stats_popupWindow.setElevation(5.0f);
+        }
+
+        ImageButton closeButton =
+                (ImageButton) stats_popup.findViewById(R.id.flashcard_stats_popup_close);
+        TextView mTextView =
+                (TextView) stats_popup.findViewById(R.id.flashcard_stats_popup_text);
+
+        String card_accuracy =
+                "Current Card Accuracy: "+String.valueOf((int)(cards.get(current_card).getStats()
+                        * 100)) + "%";
+        String card_times_studied =
+                "Current Card Times Studied: "+String.valueOf(cards.get(current_card).timesStudied);
+        String card_times_correct =
+                "Current Card Times Correct: "+String.valueOf(cards.get(current_card).timesCorrect);
+        double[] deck_stats = dk.getDeckStats();
+        String deck_accuracy =
+                "Deck Overall Accuracy: "+String.valueOf((int)(deck_stats[0] * 100)) + "%";
+        String deck_total_studied  =
+                "Deck Total Times Studied: " + String.valueOf((int) deck_stats[1]);
+        String deck_total_viewed =
+                "Cards Viewed after shuffle: "+String.valueOf((int) deck_stats[2])
+                        + "/" + String.valueOf(dk.getSize(false));
+
+        String txt = card_accuracy + (char) 10
+                + card_times_correct + (char) 10
+                + card_times_studied + (char) 10
+                + deck_accuracy + (char) 10
+                + deck_total_studied + (char) 10
+                + deck_total_viewed + (char) 10;
+
+        mTextView.setText(txt);
+
+        closeButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                stats_popupWindow.dismiss();
+            }
+        });
+
+        ConstraintLayout parent = (ConstraintLayout) findViewById(R.id.flash_card_constraint);
+        stats_popupWindow.showAtLocation(parent, Gravity.CENTER,0,0);
+
+    }
 }
