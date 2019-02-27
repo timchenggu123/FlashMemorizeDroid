@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         Intent  intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
-
         startActivityForResult(intent,READ_REQUEST_CODE);
     }
 
