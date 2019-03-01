@@ -91,11 +91,9 @@ public class flashcard extends AppCompatActivity
             public void onSwipeRight() {
                 prevCard();
             }
-
             public void onSwipeLeft() {
                 nextCard();
             }
-
             public void onTwoTaps() {
                 flipCard();
             }
@@ -104,15 +102,25 @@ public class flashcard extends AppCompatActivity
             public void onSwipeRight() {
                 prevCard();
             }
-
             public void onSwipeLeft() {
                 nextCard();
             }
-
             public void onTwoTaps() {
                 flipCard();
             }
         });
+        image_display.setOnTouchListener(new OnSwipeTouchListener(flashcard.this) {
+            public void onSwipeRight() {
+                prevCard();
+            }
+            public void onSwipeLeft() {
+                nextCard();
+            }
+            public void onTwoTaps() {
+                flipCard();
+            }
+        });
+
         //Receiving intent from main
         Intent intent = getIntent();
         filename = intent.getStringExtra(MainActivity.EXTRA_FILENAME);
@@ -396,7 +404,19 @@ public class flashcard extends AppCompatActivity
             showCard();
 
         }else{
-            return;
+            text_edit.setVisibility(View.GONE);
+            button_done.setVisibility(View.GONE);
+            button_cancel.setVisibility(View.GONE);
+
+            canvas.setVisibility(View.VISIBLE);
+            button_next.setVisibility(View.VISIBLE);
+            button_prev.setVisibility(View.VISIBLE);
+            button_bad.setVisibility(View.VISIBLE);
+            button_good.setVisibility(View.VISIBLE);
+
+            editMode = false;
+
+            showCard();
         }
     }
 
