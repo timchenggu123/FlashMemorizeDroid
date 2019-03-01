@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -41,11 +43,19 @@ public class flashcard extends AppCompatActivity
     private TextView id_display;
     private TextView total_cards_display;
     private ImageView image_display;
+    private EditText text_edit;
     private PopupWindow stats_popupWindow;
-
+    private Button button_good;
+    private Button button_bad;
+    private Button button_prev;
+    private Button button_next;
+    private Button button_cancel;
+    private Button button_done;
     private int current_card = 0;
     private LocalDecksManager mDecksManager;
     private String filename;
+
+    private boolean editMode = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -59,13 +69,23 @@ public class flashcard extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //initializing views
-        canvas = findViewById(R.id.text_canvas);
-        flip = findViewById(R.id.text_flip);
+        canvas = findViewById(R.id.flashcard_text_canvas);
+        flip = findViewById(R.id.flashcard_text_flip);
+        text_edit = findViewById(R.id.flashcard_text_edit);
         id_display = findViewById(R.id.flashcard_display_id_value);
         total_cards_display = findViewById(R.id.flashcard_display_totalcards_value);
         image_display = findViewById(R.id.flashcard_image_display);
-        //mPreference
+        button_good = findViewById(R.id.flashcard_button_good);
+        button_bad = findViewById(R.id.flashcard_button_bad);
+        button_next = findViewById(R.id.flashcard_button_next);
+        button_prev = findViewById(R.id.flashcard_button_prev);
+        button_cancel = findViewById(R.id.flashcard_button_cancel);
+        button_done = findViewById(R.id.flashcard_button_done);
 
+
+        text_edit.setVisibility(View.GONE);
+        button_cancel.setVisibility(View.GONE);
+        button_done.setVisibility(View.GONE);
 
         canvas.setOnTouchListener(new OnSwipeTouchListener(flashcard.this) {
             public void onSwipeRight() {
@@ -131,7 +151,12 @@ public class flashcard extends AppCompatActivity
         // somehow " -" 's space gets deleted in XML, have to hardcode it in here
         text = text.replaceAll(" -", Character.toString((char) 10) + (char) 10);
         //needs more work;
-        canvas.setText(text);
+        if (editMode){
+            text_edit.setText(text);
+        }else{
+            canvas.setText(text);
+        }
+
 
         //displaying image
         if (cards.get(current_card).showImage() != null) {
@@ -355,4 +380,58 @@ public class flashcard extends AppCompatActivity
     }
 
 
+    public void editCard(MenuItem item) {
+        if (! editMode) {
+            canvas.setVisibility(View.GONE);
+            button_next.setVisibility(View.GONE);
+            button_prev.setVisibility(View.GONE);
+            button_bad.setVisibility(View.GONE);
+            button_good.setVisibility(View.GONE);
+
+            text_edit.setVisibility(View.VISIBLE);
+            button_done.setVisibility(View.VISIBLE);
+            button_cancel.setVisibility(View.VISIBLE);
+
+            editMode = true;
+            showCard();
+
+        }else{
+            return;
+        }
+    }
+
+    public void editDone(View view) {
+        String txt = text_edit.getText().toString();
+        cards.get(current_card).editText(txt);
+
+        text_edit.setVisibility(View.GONE);
+        button_done.setVisibility(View.GONE);
+        button_cancel.setVisibility(View.GONE);
+
+        canvas.setVisibility(View.VISIBLE);
+        button_next.setVisibility(View.VISIBLE);
+        button_prev.setVisibility(View.VISIBLE);
+        button_bad.setVisibility(View.VISIBLE);
+        button_good.setVisibility(View.VISIBLE);
+
+        editMode = false;
+
+        showCard();
+    }
+
+    public void editCancel(View view) {
+        text_edit.setVisibility(View.GONE);
+        button_done.setVisibility(View.GONE);
+        button_cancel.setVisibility(View.GONE);
+
+        canvas.setVisibility(View.VISIBLE);
+        button_next.setVisibility(View.VISIBLE);
+        button_prev.setVisibility(View.VISIBLE);
+        button_bad.setVisibility(View.VISIBLE);
+        button_good.setVisibility(View.VISIBLE);
+
+        editMode = false;
+
+        showCard();
+    }
 }
