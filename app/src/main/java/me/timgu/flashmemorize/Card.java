@@ -46,16 +46,13 @@ public class Card implements Serializable {
     }
 
     //TODO: implement compatibility constructor
-    public Card(Object card){
-        //for compatibility purposes
 
-    }
 
     public void flip(){
         side = abs(side -1);
     }
 
-    public String show(){       
+    public String show(){
         if (side == 1){
             return front;
         }else{

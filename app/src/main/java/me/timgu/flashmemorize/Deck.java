@@ -33,12 +33,13 @@ public class Deck implements Serializable {
 
     }
     public void shuffle(int mode, int reset, int draw){
-        shuffle(0,0,0,cards.size());
+        shuffle(mode,reset,draw,cards.size());
     }
 
     public void smartShuffle(int n_cards){
         shuffle(0,0,0,n_cards);
     }
+
 
     public void shuffle(int mode, int reset, int draw, int n_cards){
     /*
@@ -94,8 +95,8 @@ public class Deck implements Serializable {
 
         //the following code executes if mode == 0;
 
-        int ncards = order.length;
-        int[] order2 = new int[ncards];
+        int ncards = cards.size();
+        int[] order2 = new int[size];
         double[] accuracy = new double[ncards];
         int[] pool = new int[ncards];
 
@@ -125,7 +126,7 @@ public class Deck implements Serializable {
             pool[card] = (int) a;
         }
         temp = -1;
-        for (int i = 0; i < ncards; i ++){
+        for (int i = 0; i < size; i ++){
             boolean proceed = false;
             int nth = 0;
 
@@ -148,8 +149,9 @@ public class Deck implements Serializable {
             }
 
             if (mode == 2){
-                order = new int[1];
-                order[0] = nth;
+                order2 = new int[1];
+                order2[0] = nth;
+                size = 1;
                 // The following code makes sure that the same card does not get drawn over and over again
                 if (last_card_drawn > -1){
                     if (last_card_drawn == nth){

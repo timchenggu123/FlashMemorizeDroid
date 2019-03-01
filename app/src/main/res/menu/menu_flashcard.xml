@@ -55,10 +55,18 @@
                 </menu>
             </item>
             <item
-                android:id="@+id/menu_stats"
+                android:id="@+id/menu_flashcard_stats"
                 app:showAsAction="ifRoom|withText"
                 android:title="Study Stats"
                 android:onClick="currentCardStats">
+
+            </item>
+
+            <item
+                android:id="@+id/menu_flashcard_edit"
+                app:showAsAction="ifRoom|withText"
+                android:title="Edit Current Card"
+                android:onClick="editCard">
 
             </item>
         </menu>

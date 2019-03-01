@@ -31,4 +31,6 @@
     <string name="flashcard_dialog_title">Number of Cards</string>
     <string name="cancel">CANCEL</string>
     <string name="confirm">CONFIRM</string>
+    <string name="flashcard_button_cancel">CANCEL</string>
+    <string name="flashcard_button_done">DONE</string>
 </resources>
