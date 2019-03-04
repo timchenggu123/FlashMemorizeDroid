@@ -5,6 +5,7 @@ package me.timgu.flashmemorize;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,16 @@ public class SerialBitmap implements Serializable {
         // Take your existing call to BitmapFactory and put it here
         bitmap = BitmapFactory.decodeFile(imgFile.getPath());
         int pause = 1;
+    }
+
+    public SerialBitmap(@NotNull String encodedString){
+        //This constructor get bitmap from string
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+        } catch(Exception e) {
+            e.getMessage();
+        }
     }
 
     // Converts the Bitmap into a byte array for serialization
@@ -47,6 +58,39 @@ public class SerialBitmap implements Serializable {
             bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
         } catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public static String bitMapToString(Bitmap bitmap){
+        if (bitmap == null){
+            return null;
+        }
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    public String getAsString(){
+        if (bitmap == null){
+            return null;
+        }
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    public static Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
         }
     }
 }

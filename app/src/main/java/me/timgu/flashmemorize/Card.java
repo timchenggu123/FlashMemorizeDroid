@@ -2,6 +2,9 @@ package me.timgu.flashmemorize;
 
 import android.graphics.Bitmap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -45,8 +48,29 @@ public class Card implements Serializable {
         }
     }
 
-    //TODO: implement compatibility constructor
+    //TODO: WIP
+    public JSONObject onSave(){
+        JSONObject obj = new JSONObject();
 
+        try {
+            obj.put("side", side);
+            obj.put("timesStudied", timesStudied);
+            obj.put("timesCorrect", timesCorrect);
+            obj.put("viewed", viewed);
+            obj.put("front", front);
+            obj.put("back", back);
+            obj.put("id", id);
+            obj.put("back", back);
+            obj.put("back", back);
+            obj.put("front_pic",front_pic.getAsString());
+            obj.put("back_pic",back_pic.getAsString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return obj;
+    }
 
     public void flip(){
         side = abs(side -1);
