@@ -1,5 +1,6 @@
 package me.timgu.flashmemorize;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 
 import org.json.JSONException;
@@ -60,16 +61,29 @@ public class Card implements Serializable {
             obj.put("front", front);
             obj.put("back", back);
             obj.put("id", id);
-            obj.put("back", back);
-            obj.put("back", back);
             obj.put("front_pic",front_pic.getAsString());
             obj.put("back_pic",back_pic.getAsString());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
-
         return obj;
+    }
+
+    public void onRead(JSONObject obj){
+        try{
+            side = Integer.valueOf( obj.get("side").toString());
+            timesStudied = Integer.valueOf(obj.get("timesStudied").toString());
+            timesCorrect = Integer.valueOf(obj.get("timesCorrect").toString());
+            viewed = Integer.valueOf(obj.get("viewed").toString());
+            front = obj.get("front").toString();
+            back = obj.get("back").toString();
+            id = Integer.valueOf(obj.get("id").toString());
+            front_pic =  new SerialBitmap(obj.get("front_pic").toString());
+            back_pic = new SerialBitmap(obj.get("back_pic").toString());
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
     public void flip(){
