@@ -2,6 +2,9 @@ package me.timgu.flashmemorize;
 
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -32,9 +35,41 @@ public class Deck implements Serializable {
         }
 
     }
+
+    public JSONObject onSave(){
+        JSONObject obj = new JSONObject();
+        try{
+            obj.put("size",size);
+            obj.put("order",order);
+            obj.put("name",name);
+
+            JSONObject cards_obj = new JSONObject();
+            int indx = 0;
+            for (Card card: cards){
+                obj.put(Integer.toString(indx), card.onSave());
+                indx++;
+            }
+            obj.put("cards",cards_obj);
+            return obj;
+        } catch(JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void onRead(JSONObject obj){
+        try{
+            size = Integer.valueOf(obj.get("size").toString());
+            //TODO wip
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+    }
+
     public void shuffle(int mode, int reset, int draw){
         shuffle(mode,reset,draw,cards.size());
     }
+
 
     public void smartShuffle(int n_cards){
         shuffle(0,0,0,n_cards);
