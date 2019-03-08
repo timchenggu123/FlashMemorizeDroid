@@ -49,6 +49,22 @@ public class Card implements Serializable {
         }
     }
 
+    public Card(JSONObject obj){
+        try{
+            side = Integer.valueOf( obj.get("side").toString());
+            timesStudied = Integer.valueOf(obj.get("timesStudied").toString());
+            timesCorrect = Integer.valueOf(obj.get("timesCorrect").toString());
+            viewed = Integer.valueOf(obj.get("viewed").toString());
+            front = obj.get("front").toString();
+            back = obj.get("back").toString();
+            id = Integer.valueOf(obj.get("id").toString());
+            front_pic =  new SerialBitmap(obj.get("front_pic").toString());
+            back_pic = new SerialBitmap(obj.get("back_pic").toString());
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
     //TODO: WIP
     public JSONObject onSave(){
         JSONObject obj = new JSONObject();
@@ -61,13 +77,15 @@ public class Card implements Serializable {
             obj.put("front", front);
             obj.put("back", back);
             obj.put("id", id);
-            obj.put("front_pic",front_pic.getAsString());
-            obj.put("back_pic",back_pic.getAsString());
+            if (front_pic != null){obj.put("front_pic",front_pic.getAsString());}
+                else{obj.put("front_pic","");}
+            if (back_pic != null){obj.put("back_pic",back_pic.getAsString());}
+                else{obj.put("back_pic","");}
+            return obj;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
-        return obj;
     }
 
     public void onRead(JSONObject obj){

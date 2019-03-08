@@ -27,11 +27,16 @@ public class SerialBitmap implements Serializable {
 
     public SerialBitmap(@NotNull String encodedString){
         //This constructor get bitmap from string
-        try {
-            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-        } catch(Exception e) {
-            e.getMessage();
+        if (encodedString.length()==0){
+            bitmap = null;
+        }else {
+
+            try {
+                byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            } catch (Exception e) {
+                e.getMessage();
+            }
         }
     }
 
@@ -74,7 +79,7 @@ public class SerialBitmap implements Serializable {
 
     public String getAsString(){
         if (bitmap == null){
-            return null;
+            return "";
         }
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);

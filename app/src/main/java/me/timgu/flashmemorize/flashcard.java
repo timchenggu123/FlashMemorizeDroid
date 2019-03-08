@@ -29,6 +29,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -128,8 +130,10 @@ public class flashcard extends AppCompatActivity
         //initializing LocalDecksManager
         mDecksManager = new LocalDecksManager(this);
         try {
-            dk = mDecksManager.loadDeck(filename);
+            dk = mDecksManager.LoadDeck1(filename);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         cards = dk.getDeck();
@@ -147,7 +151,7 @@ public class flashcard extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         try {
-            mDecksManager.saveDeckToLocal(dk, filename);
+            mDecksManager.saveDeckToLocal1(dk, filename);
         } catch (IOException e) {
             e.printStackTrace();
         }

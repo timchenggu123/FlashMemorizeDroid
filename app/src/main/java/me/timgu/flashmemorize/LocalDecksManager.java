@@ -9,6 +9,9 @@ import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,6 +25,8 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -168,6 +173,19 @@ public class LocalDecksManager {
 
     }
 
+    public void saveDeckToLocal1(Deck deck, String filename) throws IOException{
+        Writer output = null;
+        try {
+            OutputStreamWriter outputStreamWriter =
+                    new OutputStreamWriter(context.openFileOutput(filename, Context.MODE_PRIVATE));
+            outputStreamWriter.write(deck.onSave().toString());
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void addDeck(Uri uri) throws IOException {
         String deckName = getDeckName(uri);
@@ -180,7 +198,8 @@ public class LocalDecksManager {
         mDeckListEditor.putString(deckName,filename);
         mDeckListEditor.apply();
 
-        saveDeckToLocal(deck,filename);
+        //saveDeckToLocal(deck,filename);
+        saveDeckToLocal1(deck,filename);
     }
 
     public void removeDeck(String deckName){
@@ -193,6 +212,8 @@ public class LocalDecksManager {
         file.delete();
     }
 
+
+    //This method is old way of saving the deck object. Obsolete.
     public Deck loadDeck(String filename) throws FileNotFoundException {
         FileInputStream inputStream;
         Deck deck = null;
@@ -222,5 +243,38 @@ public class LocalDecksManager {
         }
 
         return deck;
+    }
+
+    public Deck LoadDeck1(String filename) throws FileNotFoundException, JSONException {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput(filename);
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString;
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject obj = new JSONObject(ret);
+
+        return new Deck(obj);
+
     }
 }

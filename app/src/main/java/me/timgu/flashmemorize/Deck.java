@@ -18,7 +18,7 @@ public class Deck implements Serializable {
     private  int[] order;
 
     public String name;
-    public List<Card> cards;
+    public List<Card> cards = new ArrayList<>();
 
     private int last_card_drawn = -1;
     //Deck subdeck; //To be implemented in future
@@ -36,17 +36,52 @@ public class Deck implements Serializable {
 
     }
 
+    public Deck(JSONObject obj){
+        try{
+            size = obj.getInt("size");
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+        try{
+            name = obj.getString("name");
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+        try{
+            JSONObject card_objects = obj.getJSONObject("cards");
+            for (int i = 0; i < card_objects.length(); i++){
+                Card card =
+                        new Card(card_objects.getJSONObject(Integer.toString(i)));
+                cards.add(card);
+            }
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+        try{
+            String s = obj.getString("order");
+            List<String> temp =
+                    Arrays.asList(s.substring(1, s.length() - 1).split(", "));
+            order = new int[size];
+            for (int i = 0; i< order.length; i++){
+                order[i] = Integer.valueOf(temp.get(i));
+            }
+            //TODO wip
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+    }
+
     public JSONObject onSave(){
         JSONObject obj = new JSONObject();
         try{
             obj.put("size",size);
-            obj.put("order",order);
+            obj.put("order",Arrays.toString(order));
             obj.put("name",name);
 
             JSONObject cards_obj = new JSONObject();
             int indx = 0;
             for (Card card: cards){
-                obj.put(Integer.toString(indx), card.onSave());
+                cards_obj.put(Integer.toString(indx), card.onSave());
                 indx++;
             }
             obj.put("cards",cards_obj);
@@ -57,14 +92,6 @@ public class Deck implements Serializable {
         }
     }
 
-    public void onRead(JSONObject obj){
-        try{
-            size = Integer.valueOf(obj.get("size").toString());
-            //TODO wip
-        } catch(JSONException e){
-            e.printStackTrace();
-        }
-    }
 
     public void shuffle(int mode, int reset, int draw){
         shuffle(mode,reset,draw,cards.size());
