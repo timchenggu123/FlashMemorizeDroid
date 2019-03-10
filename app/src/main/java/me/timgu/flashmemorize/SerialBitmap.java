@@ -33,7 +33,7 @@ public class SerialBitmap implements Serializable {
 
             try {
                 byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             } catch (Exception e) {
                 e.getMessage();
             }

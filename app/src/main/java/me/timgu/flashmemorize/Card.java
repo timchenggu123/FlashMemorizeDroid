@@ -77,9 +77,11 @@ public class Card implements Serializable {
             obj.put("front", front);
             obj.put("back", back);
             obj.put("id", id);
-            if (front_pic != null){obj.put("front_pic",front_pic.getAsString());}
+            if (front_pic != null){
+                obj.put("front_pic",front_pic.getAsString());}
                 else{obj.put("front_pic","");}
-            if (back_pic != null){obj.put("back_pic",back_pic.getAsString());}
+            if (back_pic != null){
+                obj.put("back_pic",back_pic.getAsString());}
                 else{obj.put("back_pic","");}
             return obj;
         } catch (JSONException e) {

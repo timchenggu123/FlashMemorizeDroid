@@ -44,6 +44,7 @@ public class flashcard extends AppCompatActivity
     private TextView flip;
     private TextView id_display;
     private TextView total_cards_display;
+    private TextView side_display;
     private ImageView image_display;
     private EditText text_edit;
     private PopupWindow stats_popupWindow;
@@ -76,6 +77,7 @@ public class flashcard extends AppCompatActivity
         text_edit = findViewById(R.id.flashcard_text_edit);
         id_display = findViewById(R.id.flashcard_display_id_value);
         total_cards_display = findViewById(R.id.flashcard_display_totalcards_value);
+        side_display = findViewById(R.id.flashcard_display_side_value);
         image_display = findViewById(R.id.flashcard_image_display);
         button_good = findViewById(R.id.flashcard_button_good);
         button_bad = findViewById(R.id.flashcard_button_bad);
@@ -83,7 +85,6 @@ public class flashcard extends AppCompatActivity
         button_prev = findViewById(R.id.flashcard_button_prev);
         button_cancel = findViewById(R.id.flashcard_button_cancel);
         button_done = findViewById(R.id.flashcard_button_done);
-
 
         text_edit.setVisibility(View.GONE);
         button_cancel.setVisibility(View.GONE);
@@ -208,7 +209,7 @@ public class flashcard extends AppCompatActivity
         //Right now [int correct] should be either 0 or 1;
 
         if (this.current_card == dk.getSize()) {
-            current_card = current_card - 1; //why again? don't remember, just copied over...
+            current_card = current_card - 1;
         }
 
         int curId = cards.get(current_card).getId(); //gets the id of the card currently on display
@@ -228,7 +229,15 @@ public class flashcard extends AppCompatActivity
         String dispId = String.valueOf(curId + 1);//+1 here because current_card starts from 0
         String dispTotalCards =
                 String.valueOf(current_card + 1) + '/' + String.valueOf(deckSize);
+        int s = cards.get(current_card).side;
+        String dispSide;
+        if (s == 1){
+            dispSide = "Front";
+        }else{
+            dispSide = "Back";
+        }
 
+        side_display.setText(dispSide);
         id_display.setText(dispId);
         total_cards_display.setText(dispTotalCards);
 

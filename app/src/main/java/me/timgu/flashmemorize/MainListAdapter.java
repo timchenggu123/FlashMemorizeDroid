@@ -42,7 +42,8 @@ public class MainListAdapter extends
     }
 
 
-    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener{
         public final TextView wordItemView;
         public final Button deleteButton;
         final MainListAdapter mAdapter;
@@ -53,6 +54,7 @@ public class MainListAdapter extends
             deleteButton = itemView.findViewById(R.id.main_list_delete);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
 
             deleteButton.setVisibility(View.GONE);
             deleteButton.setOnClickListener(this);
@@ -81,6 +83,13 @@ public class MainListAdapter extends
                 flashcard_launched = true; //to prevent flashcard_launched being called twice
                 v.getContext().startActivity(intent);
             }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            editMode = !editMode;
+            notifyDataSetChanged();
+            return true;
         }
     }
     @NonNull
