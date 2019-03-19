@@ -3,13 +3,17 @@ package me.timgu.flashmemorize;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +59,6 @@ public class MainListAdapter extends
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-
             deleteButton.setVisibility(View.GONE);
             deleteButton.setOnClickListener(this);
         }
@@ -83,6 +86,7 @@ public class MainListAdapter extends
                 flashcard_launched = true; //to prevent flashcard_launched being called twice
                 v.getContext().startActivity(intent);
             }
+
         }
 
         @Override
