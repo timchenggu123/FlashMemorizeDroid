@@ -2,6 +2,7 @@ package me.timgu.flashmemorize;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -23,7 +24,8 @@ import android.widget.Toast;
 import java.io.IOException;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements MainListAdapter.OnListActionListener{
     private static final int READ_REQUEST_CODE = 6936;
     public static final String EXTRA_FILENAME =
             "me.timgu.flashmemorize.extra.FILENAME";
@@ -71,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //----------------------Accessors--------------------------------------
+
+    private Context getContext(){
+        return this;
+    }
+
+    //----------------------Utility-----------------------------------------
 
     public void performFileSearch(View v){
         requestPermission();
@@ -79,6 +88,24 @@ public class MainActivity extends AppCompatActivity {
         intent.setType("*/*");
         startActivityForResult(intent,READ_REQUEST_CODE);
     }
+
+    private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
+        protected Void doInBackground(Uri...uri){
+            for (Uri u: uri){
+                try {
+                    mDecksManager.addDeck(u);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void v){
+            mAdapter.updateDeckList();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
@@ -113,31 +140,30 @@ public class MainActivity extends AppCompatActivity {
         editMode = !editMode;
     }
 
-    private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
-        protected Void doInBackground(Uri...uri){
-            for (Uri u: uri){
-                try {
-                    mDecksManager.addDeck(u);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private class LaunchDeckTask extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            for (String filename: strings){
+                Intent intent = new Intent(getContext(),flashcard.class);
+                intent.putExtra(EXTRA_FILENAME,filename);
+                startActivity(intent);
             }
             return null;
         }
 
-        protected void onPostExecute(Void v){
-            mAdapter.updateDeckList();
-        }
+    }
+    // -------------------for MainListAdapter.OnListActionListener-----------------------------
+    @Override
+    public void launchDeck(String filename) {
+        new LaunchDeckTask().execute(filename);
     }
 
-    private void launchflashcard (String filename){
-
-        Toast.makeText(this, "Deck Loaded", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this,flashcard.class);
-        intent.putExtra(EXTRA_FILENAME,filename);
-        startActivity(intent);
+    @Override
+    public void deleteDeck(String deckName) {
+        mDecksManager.removeDeck(deckName);
     }
-
+    // ------------------end for MainListAdapter.OnListActionListener--------------------------
     private void requestPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)

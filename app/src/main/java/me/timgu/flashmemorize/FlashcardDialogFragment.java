@@ -19,6 +19,7 @@ public class FlashcardDialogFragment extends DialogFragment {
     }
 
     FlashcardDialogListener listener;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

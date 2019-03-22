@@ -33,6 +33,13 @@ public class MainListAdapter extends
     private Boolean editMode =false;
     public Boolean flashcard_launched = false;
 
+    public interface OnListActionListener{
+        public void launchDeck(String filename);
+        public void deleteDeck(String deckName);
+    }
+
+    private OnListActionListener actionListener;
+
     public MainListAdapter(Context context, Map<String,?> deckList){
         mInflater = LayoutInflater.from(context); //what the heck does this mean?\
         this.mDeckListKeys= new ArrayList<> (deckList.keySet());
@@ -69,9 +76,8 @@ public class MainListAdapter extends
             int mPosition = getLayoutPosition();
 
             if (v.getId() == R.id.main_list_delete){
-                LocalDecksManager ldm = new LocalDecksManager(context);
                 String deckName = mDeckListKeys.get(mPosition);
-                ldm.removeDeck(deckName);
+                actionListener.deleteDeck(deckName);
 
                 mDeckListKeys.remove(mPosition);
                 mDeckListValues.remove(mPosition);
@@ -79,12 +85,10 @@ public class MainListAdapter extends
                 notifyDataSetChanged();
             }else if (!flashcard_launched){
                 String filename = (String) mDeckListValues.get(mPosition);
-                Intent intent = new Intent(v.getContext(),flashcard.class);
-                intent.putExtra(EXTRA_FILENAME,filename);
                 Toast.makeText(context, "Loading Deck...", Toast.LENGTH_SHORT).show();
 
                 flashcard_launched = true; //to prevent flashcard_launched being called twice
-                v.getContext().startActivity(intent);
+                actionListener.launchDeck(filename);
             }
 
         }
