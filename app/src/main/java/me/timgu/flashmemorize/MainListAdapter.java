@@ -45,6 +45,7 @@ public class MainListAdapter extends
         this.mDeckListKeys= new ArrayList<> (deckList.keySet());
         this.mDeckListValues= new ArrayList<>(deckList.values());
         this.context = context;
+        actionListener = (OnListActionListener) context;
     }
 
     public void editDeckList(Boolean editMode) {
