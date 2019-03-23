@@ -131,12 +131,12 @@ public class flashcard extends AppCompatActivity
         //initializing LocalDecksManager
         mDecksManager = new LocalDecksManager(this);
         try {
-            dk = mDecksManager.LoadDeck1(filename);
+            dk = mDecksManager.loadDeck(filename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
+        } /*catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
         cards = dk.getDeck();
         showCard();
         showDeckStats();
@@ -152,7 +152,7 @@ public class flashcard extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         try {
-            mDecksManager.saveDeckToLocal1(dk, filename);
+            mDecksManager.saveDeckToLocal(dk, filename);
         } catch (IOException e) {
             e.printStackTrace();
         }

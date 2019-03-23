@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.Serializable;
 
 public class SerialBitmap implements Serializable {
+    //This class is intended to make bitmaps serializable. Can also convert bitmaps to
+    //encoded string.
 
     public Bitmap bitmap;
 

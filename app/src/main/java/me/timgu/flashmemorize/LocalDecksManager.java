@@ -198,8 +198,8 @@ public class LocalDecksManager {
         mDeckListEditor.putString(deckName,filename);
         mDeckListEditor.apply();
 
-        //saveDeckToLocal(deck,filename);
-        saveDeckToLocal1(deck,filename);
+        saveDeckToLocal(deck,filename);
+        //saveDeckToLocal1(deck,filename);
     }
 
     public void removeDeck(String deckName){
@@ -245,7 +245,7 @@ public class LocalDecksManager {
         return deck;
     }
 
-    public Deck LoadDeck1(String filename) throws FileNotFoundException, JSONException {
+    public Deck loadDeck1(String filename) throws FileNotFoundException, JSONException {
 
         String ret = "";
 
