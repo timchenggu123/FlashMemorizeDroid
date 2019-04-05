@@ -173,7 +173,8 @@ public class LocalDecksManager {
 
     }
 
-    public void saveDeckToLocal1(Deck deck, String filename) throws IOException{
+    public void saveDeckToLocalJson(Deck deck, String filename) throws IOException{
+        //this saves the object to local as a json object.
         Writer output = null;
         try {
             OutputStreamWriter outputStreamWriter =
@@ -187,20 +188,24 @@ public class LocalDecksManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void addDeck(Uri uri) throws IOException {
+    public void addDeck(Uri uri) throws IOException, JSONException {
         String deckName = getDeckName(uri);
         String filename = deckName + ".adk";
         String textDeck = uri2Text(uri);
-        Deck deck = readTxtDeck(textDeck,deckName, uri);
-
+        Deck deck = null;
+        if (deckName.substring(deckName.length() -4).equals(".txt")) {
+            deck = readTxtDeck(textDeck, deckName, uri);
+        } else if (deckName.substring(deckName.length() - 4).equals(".adk")){
+            deck = loadJsonDeck(uri);
+        }
         SharedPreferences.Editor mDeckListEditor = getDeckList().edit();
 
         mDeckListEditor.putString(deckName,filename);
         mDeckListEditor.apply();
 
         saveDeckToLocal(deck,filename);
-        //saveDeckToLocal1(deck,filename);
     }
+
 
     public void removeDeck(String deckName){
         String filename = getDeckList().getString(deckName,null);
@@ -245,13 +250,14 @@ public class LocalDecksManager {
         return deck;
     }
 
-    public Deck loadDeck1(String filename) throws FileNotFoundException, JSONException {
+
+
+
+    public Deck loadJsonDeck(InputStream inputStream) throws FileNotFoundException, JSONException {
 
         String ret = "";
 
         try {
-            InputStream inputStream = context.openFileInput(filename);
-
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -276,5 +282,17 @@ public class LocalDecksManager {
 
         return new Deck(obj);
 
+    }
+
+    public Deck loadJsonDeck(String filename) throws FileNotFoundException, JSONException {
+        //This function was intended for loading decks saved as Json objects locally.
+        //It is currently not being used.
+        InputStream inputStream = context.openFileInput(filename);
+        return loadJsonDeck(inputStream);
+    }
+
+    public Deck loadJsonDeck(Uri uri) throws FileNotFoundException, JSONException {
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        return loadJsonDeck(inputStream);
     }
 }

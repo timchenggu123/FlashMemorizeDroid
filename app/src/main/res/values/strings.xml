@@ -35,4 +35,5 @@
     <string name="flashcard_button_done">DONE</string>
     <string name="flashcard_display_side_field">Side:</string>
     <string name="flashcard_display_side_value">Front</string>
+    <string name="export">Export</string>
 </resources>

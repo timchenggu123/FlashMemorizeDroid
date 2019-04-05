@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -89,12 +91,18 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent,READ_REQUEST_CODE);
     }
 
+    public void exportAdk(MenuItem item) {
+
+    }
+
     private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
         protected Void doInBackground(Uri...uri){
             for (Uri u: uri){
                 try {
                     mDecksManager.addDeck(u);
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -129,6 +137,8 @@ public class MainActivity extends AppCompatActivity
                         //launchflashcard(filename);
                     //}
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
