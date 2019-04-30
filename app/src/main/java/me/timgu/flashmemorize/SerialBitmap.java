@@ -5,6 +5,7 @@ package me.timgu.flashmemorize;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Base64;
 
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 
 public class SerialBitmap implements Serializable {
     //This class is intended to make bitmaps serializable. Can also convert bitmaps to
-    //encoded string.
+    //encoded string (for JSON conversion).
 
     public Bitmap bitmap;
 
@@ -25,6 +26,10 @@ public class SerialBitmap implements Serializable {
         // Take your existing call to BitmapFactory and put it here
         bitmap = BitmapFactory.decodeFile(imgFile.getPath());
         int pause = 1;
+    }
+
+    public SerialBitmap(@NotNull Bitmap image){
+        bitmap = image;
     }
 
     public SerialBitmap(@NotNull String encodedString){

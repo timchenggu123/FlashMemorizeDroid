@@ -49,6 +49,8 @@ public class Card implements Serializable {
         }
     }
 
+    //Constructor from a JSON object. Needs to be updated whenever a new variable is
+    //added to this class
     public Card(JSONObject obj){
         try{
             side = Integer.valueOf( obj.get("side").toString());
@@ -90,6 +92,8 @@ public class Card implements Serializable {
         }
     }
 
+    //This method is currently obsolete as it is been replaced by the Card constructor
+    //for JSON files. It has been kept as a reference.
     public void onRead(JSONObject obj){
         try{
             side = Integer.valueOf( obj.get("side").toString());
@@ -151,6 +155,16 @@ public class Card implements Serializable {
 
     public void updateStudyTrend(int correct){
         studyTrend.add(correct);
+    }
+
+    public void addPic(Bitmap image){
+        if (side == 1){
+            front_pic = new SerialBitmap(image);
+            front_pic_exist = true;
+        }else{
+            back_pic = new SerialBitmap(image);
+            back_pic_exist = true;
+        }
     }
     /*
     //The following are place holders for future implementations.

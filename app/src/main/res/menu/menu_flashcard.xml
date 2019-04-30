@@ -69,6 +69,12 @@
                 android:onClick="editCard">
 
             </item>
+            <item
+                android:id="@+id/menu_flashcard_add_pic"
+                app:showAsAction="ifRoom|withText"
+                android:title="Add pic to card"
+                android:onClick="addPic">
+            </item>
         </menu>
 
     </item>

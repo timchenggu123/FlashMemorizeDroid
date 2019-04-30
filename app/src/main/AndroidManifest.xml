@@ -10,15 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         >
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.myapp.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
         <activity android:name=".flashcard"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">

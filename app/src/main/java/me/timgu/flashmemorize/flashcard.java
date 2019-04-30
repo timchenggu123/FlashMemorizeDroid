@@ -3,11 +3,14 @@ package me.timgu.flashmemorize;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.DialogFragment;
@@ -40,6 +43,7 @@ public class flashcard extends AppCompatActivity
     public List<Card> cards;
     public Deck dk;
 
+    //Views
     private TextView canvas;
     private TextView flip;
     private TextView id_display;
@@ -54,11 +58,15 @@ public class flashcard extends AppCompatActivity
     private Button button_next;
     private Button button_cancel;
     private Button button_done;
+
+
     private int current_card = 0;
     private LocalDecksManager mDecksManager;
     private String filename;
 
     private boolean editMode = false;
+
+    private int READ_REQUEST_CODE = 6937;
 
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -71,7 +79,7 @@ public class flashcard extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar_flashcard);
         setSupportActionBar(toolbar);
 
-        //initializing views
+        //Views in normal mode initializing views
         canvas = findViewById(R.id.flashcard_text_canvas);
         flip = findViewById(R.id.flashcard_text_flip);
         text_edit = findViewById(R.id.flashcard_text_edit);
@@ -86,6 +94,7 @@ public class flashcard extends AppCompatActivity
         button_cancel = findViewById(R.id.flashcard_button_cancel);
         button_done = findViewById(R.id.flashcard_button_done);
 
+        //--Views in editing mode
         text_edit.setVisibility(View.GONE);
         button_cancel.setVisibility(View.GONE);
         button_done.setVisibility(View.GONE);
@@ -466,5 +475,38 @@ public class flashcard extends AppCompatActivity
         editMode = false;
 
         showCard();
+    }
+
+    public void addPic(MenuItem item) {
+        performImageSearch();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void performImageSearch(){
+        Intent  intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(intent,READ_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData){
+
+        //for addPic method
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            Uri uri = null;
+            if(resultData != null){
+                uri = resultData.getData();
+
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+                    cards.get(current_card).addPic(bitmap);
+                    showCard();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
