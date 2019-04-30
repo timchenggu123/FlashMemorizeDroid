@@ -92,8 +92,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void exportAdk(MenuItem item) {
-
+        //TODO complete export Adk feature sometime in future
     }
+
 
     private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
         protected Void doInBackground(Uri...uri){
