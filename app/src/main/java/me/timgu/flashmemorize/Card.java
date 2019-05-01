@@ -166,6 +166,16 @@ public class Card implements Serializable {
             back_pic_exist = true;
         }
     }
+
+    public void deletePic(){
+        if (side == 1){
+            front_pic = null;
+            front_pic_exist = false;
+        }else{
+            back_pic = null;
+            back_pic_exist = false;
+        }
+    }
     /*
     //The following are place holders for future implementations.
 

@@ -72,8 +72,15 @@
             <item
                 android:id="@+id/menu_flashcard_add_pic"
                 app:showAsAction="ifRoom|withText"
-                android:title="Add pic to card"
+                android:title="Add Pic To Card"
                 android:onClick="addPic">
+            </item>
+
+            <item
+                android:id="@+id/menu_flashcard_delete_pic"
+                app:showAsAction="ifRoom|withText"
+                android:title="Delete Current Pic"
+                android:onClick="deletePic">
             </item>
         </menu>
 

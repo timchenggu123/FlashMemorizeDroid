@@ -509,4 +509,9 @@ public class flashcard extends AppCompatActivity
             }
         }
     }
+
+    public void deletePic(MenuItem item) {
+        cards.get(current_card).deletePic();
+        showCard();
+    }
 }
