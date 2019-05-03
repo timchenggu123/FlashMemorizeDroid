@@ -514,4 +514,5 @@ public class flashcard extends AppCompatActivity
         cards.get(current_card).deletePic();
         showCard();
     }
+
 }

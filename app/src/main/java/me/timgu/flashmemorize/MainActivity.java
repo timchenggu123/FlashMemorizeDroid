@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
     private LocalDecksManager mDecksManager;
 
     //Declare reference constants
+    private boolean exportMode = true;
     private boolean editMode = true;
 
 
@@ -90,11 +91,6 @@ public class MainActivity extends AppCompatActivity
         intent.setType("*/*");
         startActivityForResult(intent,READ_REQUEST_CODE);
     }
-
-    public void exportAdk(MenuItem item) {
-        //TODO complete export Adk feature sometime in future
-    }
-
 
     private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
         protected Void doInBackground(Uri...uri){
@@ -146,11 +142,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void editDeckList(MenuItem item) {
-        mAdapter.editDeckList(editMode);
-        editMode = !editMode;
-    }
-
     private class LaunchDeckTask extends AsyncTask<String,Void,Void>{
 
         @Override
@@ -164,6 +155,18 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+
+    public void editDeckList(MenuItem item) {
+        mAdapter.setEditMode(editMode);
+        editMode = !editMode;
+    }
+
+    public void exportAdk(MenuItem item) {
+        mAdapter.setExportMode(exportMode);
+        exportMode = !exportMode;
+    }
+
     // -------------------for MainListAdapter.OnListActionListener-----------------------------
     @Override
     public void launchDeck(String filename) {
@@ -203,3 +206,5 @@ public class MainActivity extends AppCompatActivity
     }
 
 }
+
+

@@ -82,6 +82,7 @@
                 android:title="Delete Current Pic"
                 android:onClick="deletePic">
             </item>
+
         </menu>
 
     </item>

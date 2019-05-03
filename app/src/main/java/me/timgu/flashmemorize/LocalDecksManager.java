@@ -1,13 +1,18 @@
 package me.timgu.flashmemorize;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.FileProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -207,6 +212,7 @@ public class LocalDecksManager {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     public void removeDeck(String deckName){
         String filename = getDeckList().getString(deckName,null);
         SharedPreferences.Editor mDeckListEditor = getDeckList().edit();
@@ -294,5 +300,38 @@ public class LocalDecksManager {
     public Deck loadJsonDeck(Uri uri) throws FileNotFoundException, JSONException {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         return loadJsonDeck(inputStream);
+    }
+
+    public void exportDeck(String filename) throws IOException {
+        Deck dk = loadDeck(filename);
+        String tempFilename = filename + ".json";
+        saveDeckToLocalJson(dk,tempFilename);
+        File dir = context.getFilesDir();
+        File file = new File(dir, tempFilename);
+        shareFile(file);
+        file.delete();
+    }
+
+    private void shareFile(File file) {
+
+        Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+
+        intentShareFile.setType("application/json");
+        Uri contentUri = FileProvider.getUriForFile(context, "me.timgu.fileprovider",file);
+
+        intentShareFile.putExtra(Intent.EXTRA_STREAM,
+               contentUri);
+        intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        // Uri.parse("file://"+file.getAbsolutePath())
+        //if you need
+        //intentShareFile.putExtra(Intent.EXTRA_SUBJECT,"Sharing File Subject);
+        //intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File Description");
+
+        List<ResolveInfo> resolvedInfoActivities = context.getPackageManager().queryIntentActivities(intentShareFile, PackageManager.MATCH_DEFAULT_ONLY);
+        for (ResolveInfo ri : resolvedInfoActivities) {
+            context.grantUriPermission(ri.activityInfo.packageName,contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+
+        context.startActivity(Intent.createChooser(intentShareFile, "Share File"));
     }
 }

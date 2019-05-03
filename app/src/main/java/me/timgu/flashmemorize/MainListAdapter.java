@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class MainListAdapter extends
             "me.timgu.flashmemorize.extra.FILENAME";
     private Context context;
     private Boolean editMode =false;
+    private Boolean exportMode = false;
     public Boolean flashcard_launched = false;
 
     public interface OnListActionListener{
@@ -48,9 +50,13 @@ public class MainListAdapter extends
         actionListener = (OnListActionListener) context;
     }
 
-    public void editDeckList(Boolean editMode) {
+    public void setEditMode(Boolean editMode) {
         this.editMode = editMode;
         notifyDataSetChanged();
+    }
+
+    public void setExportMode(Boolean exportMode){
+        this.exportMode = exportMode;
     }
 
 
@@ -75,7 +81,6 @@ public class MainListAdapter extends
         public void onClick(View v) {
 
             int mPosition = getLayoutPosition();
-
             if (v.getId() == R.id.main_list_delete){
                 String deckName = mDeckListKeys.get(mPosition);
                 actionListener.deleteDeck(deckName);
@@ -84,7 +89,15 @@ public class MainListAdapter extends
                 mDeckListValues.remove(mPosition);
 
                 notifyDataSetChanged();
-            }else if (!flashcard_launched){
+            }else if (exportMode){
+                LocalDecksManager ldm = new LocalDecksManager(context);
+                String filename = (String) mDeckListValues.get(mPosition);
+                try {
+                    ldm.exportDeck(filename);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (!flashcard_launched){
                 String filename = (String) mDeckListValues.get(mPosition);
                 Toast.makeText(context, "Loading Deck...", Toast.LENGTH_SHORT).show();
 
