@@ -309,7 +309,6 @@ public class LocalDecksManager {
         File dir = context.getFilesDir();
         File file = new File(dir, tempFilename);
         shareFile(file);
-        file.delete();
     }
 
     private void shareFile(File file) {
@@ -322,10 +321,6 @@ public class LocalDecksManager {
         intentShareFile.putExtra(Intent.EXTRA_STREAM,
                contentUri);
         intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        // Uri.parse("file://"+file.getAbsolutePath())
-        //if you need
-        //intentShareFile.putExtra(Intent.EXTRA_SUBJECT,"Sharing File Subject);
-        //intentShareFile.putExtra(Intent.EXTRA_TEXT, "Sharing File Description");
 
         List<ResolveInfo> resolvedInfoActivities = context.getPackageManager().queryIntentActivities(intentShareFile, PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo ri : resolvedInfoActivities) {
