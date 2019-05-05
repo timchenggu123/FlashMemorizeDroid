@@ -97,6 +97,7 @@ public class MainListAdapter extends
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                exportMode = false;
             } else if (!flashcard_launched){
                 String filename = (String) mDeckListValues.get(mPosition);
                 Toast.makeText(context, "Loading Deck...", Toast.LENGTH_SHORT).show();

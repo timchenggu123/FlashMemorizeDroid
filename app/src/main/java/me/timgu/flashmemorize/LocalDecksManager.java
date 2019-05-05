@@ -1,6 +1,7 @@
 package me.timgu.flashmemorize;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -307,8 +309,17 @@ public class LocalDecksManager {
         String tempFilename = filename + ".json";
         saveDeckToLocalJson(dk,tempFilename);
         File dir = context.getFilesDir();
-        File file = new File(dir, tempFilename);
+        final File file = new File(dir, tempFilename);
         shareFile(file);
+        new AlertDialog.Builder(context)
+                .setMessage("Export complete")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        file.delete();
+                    }
+                })
+        .show();
     }
 
     private void shareFile(File file) {

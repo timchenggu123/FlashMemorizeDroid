@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity
     private LocalDecksManager mDecksManager;
 
     //Declare reference constants
-    private boolean exportMode = true;
     private boolean editMode = true;
 
 
@@ -163,8 +162,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void exportAdk(MenuItem item) {
-        mAdapter.setExportMode(exportMode);
-        exportMode = !exportMode;
+        mAdapter.setExportMode(true);
+        Toast.makeText(this, "Choose a deck to export...", Toast.LENGTH_SHORT).show();
     }
 
     // -------------------for MainListAdapter.OnListActionListener-----------------------------

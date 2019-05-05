@@ -19,7 +19,7 @@
             <item
                 android:id="@+id/menu_main_export"
                 android:onClick="exportAdk"
-                android:title="@string/export"
+                android:title="Export Deck"
                 app:showAsAction="ifRoom|withText">
 
             </item>
