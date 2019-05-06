@@ -83,6 +83,13 @@
                 android:onClick="deletePic">
             </item>
 
+            <item
+                android:id="@+id/menu_flashcard_new_card"
+                app:showAsAction="ifRoom|withText"
+                android:title="Append New Card"
+                android:onClick="newCard">
+            </item>
+
         </menu>
 
     </item>

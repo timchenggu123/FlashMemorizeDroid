@@ -15,11 +15,25 @@
                 app:showAsAction="ifRoom|withText">
 
             </item>
+            <item
+                android:id="@+id/menu_main_new_deck"
+                android:onClick="newDeck"
+                android:title="New Empty Deck"
+                app:showAsAction="ifRoom|withText">
 
+            </item>
             <item
                 android:id="@+id/menu_main_export"
                 android:onClick="exportAdk"
                 android:title="Export Deck"
+                app:showAsAction="ifRoom|withText">
+
+            </item>
+
+            <item
+                android:id="@+id/menu_main_import"
+                android:onClick="importAdk"
+                android:title="Import Deck Json File"
                 app:showAsAction="ifRoom|withText">
 
             </item>

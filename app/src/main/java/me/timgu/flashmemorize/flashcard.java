@@ -515,4 +515,7 @@ public class flashcard extends AppCompatActivity
         showCard();
     }
 
+    public void newCard(MenuItem item) {
+        dk.cards.add(new Card("","",dk.cards.size(),null,null));
+    }
 }

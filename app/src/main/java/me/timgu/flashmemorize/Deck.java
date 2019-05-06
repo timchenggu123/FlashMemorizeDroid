@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck implements Serializable {
+    public static final int SHUFFLE_MODE_NO_REPEAT = 1;
+    public static final int SHUFFLE_MODE_YES_REPEAT = 0;
+    public static final int SHUFFLE_MODE_DRAW_ONE = 2;
     private int size;
     private  int[] order;
 
@@ -34,6 +37,18 @@ public class Deck implements Serializable {
             order[i] = i;
         }
 
+    }
+
+    public Deck(String name_arg){
+        //for creating a new empty deck
+        name = name_arg;
+        cards = new ArrayList<> ();
+        cards.add(new Card("","",0,null,null));
+        size = cards.size();
+
+        //initializing order
+        order = new int[size];
+        order[0] = 0;
     }
 
     public Deck(JSONObject obj){
@@ -99,7 +114,8 @@ public class Deck implements Serializable {
 
 
     public void smartShuffle(int n_cards){
-        shuffle(0,0,0,n_cards);
+        //
+        shuffle(Deck.SHUFFLE_MODE_YES_REPEAT,0,0,n_cards);
     }
 
 
@@ -117,7 +133,7 @@ public class Deck implements Serializable {
     #set reset = 1 to reset deck in order with all cards facing front
      */
         //before shuffle begins, first reset all viewed stats
-        //This was originally not a problem in Python but, since Java passes objects
+        //This was originally not a problem in Python ,but since Java passes objects
         //by reference there is now a need to reset viewed.
         if (draw == 0){
             for (Card c: cards){

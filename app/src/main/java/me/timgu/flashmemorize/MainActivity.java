@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent,READ_REQUEST_CODE);
     }
 
+    public void importAdk(MenuItem item) {
+    }
+
     private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
         protected Void doInBackground(Uri...uri){
             for (Uri u: uri){
@@ -164,6 +167,10 @@ public class MainActivity extends AppCompatActivity
     public void exportAdk(MenuItem item) {
         mAdapter.setExportMode(true);
         Toast.makeText(this, "Choose a deck to export...", Toast.LENGTH_SHORT).show();
+    }
+
+    public void newDeck(MenuItem item) {
+
     }
 
     // -------------------for MainListAdapter.OnListActionListener-----------------------------
