@@ -477,6 +477,7 @@ public class flashcard extends AppCompatActivity
         showCard();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void addPic(MenuItem item) {
         performImageSearch();
     }
