@@ -91,9 +91,6 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent,READ_REQUEST_CODE);
     }
 
-    public void importAdk(MenuItem item) {
-    }
-
     private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
         protected Void doInBackground(Uri...uri){
             for (Uri u: uri){
@@ -127,6 +124,11 @@ public class MainActivity extends AppCompatActivity
                     String deckName = mDecksManager.getDeckName(uri);
                     String filename = mDecksManager.getDeckList().getString(deckName,null);
 
+                    if (!(deckName.substring(deckName.length() -4).equals(".txt") ||
+                            deckName.substring(deckName.length() - 5).equals(".json"))) {
+                        Toast.makeText(this,"File Format Not Supported",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     mDecksManager.addDeck(uri);
                     mDecksManager.getDeckList().getString(deckName,null);

@@ -30,14 +30,6 @@
 
             </item>
 
-            <item
-                android:id="@+id/menu_main_import"
-                android:onClick="importAdk"
-                android:title="Import Deck Json File"
-                app:showAsAction="ifRoom|withText">
-
-            </item>
-
         </menu>
     </item>
 

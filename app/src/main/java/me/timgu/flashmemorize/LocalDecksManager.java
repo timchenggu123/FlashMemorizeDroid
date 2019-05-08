@@ -149,6 +149,7 @@ public class LocalDecksManager {
         return displayName;
     }
 
+
     public void saveDeckToLocal(Deck deck, String filename) throws IOException {
 
         //Converting deck object to byte array
@@ -202,7 +203,7 @@ public class LocalDecksManager {
         Deck deck = null;
         if (deckName.substring(deckName.length() -4).equals(".txt")) {
             deck = readTxtDeck(textDeck, deckName, uri);
-        } else if (deckName.substring(deckName.length() - 4).equals(".adk")){
+        } else if (deckName.substring(deckName.length() - 5).equals(".json")){
             deck = loadJsonDeck(uri);
         }
         SharedPreferences.Editor mDeckListEditor = getDeckList().edit();
