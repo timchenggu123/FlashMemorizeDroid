@@ -4,6 +4,6 @@ Developed using Android Studio
 
 This is the android version of the desktop app FlashMemorize!
 
-The app is still WIP so I have not uploaded any release apk yet, so you will have to build your own apk using android studio...
+The app is still WIP so I have not uploaded any release apk yet. You will have to build your own apk using Android Studio for the time being...
 
-Hopefull an official version will be released soon in the future!
+Hopefully an official version will be released soon in the future!
