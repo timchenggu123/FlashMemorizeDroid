@@ -199,17 +199,30 @@ public class LocalDecksManager {
     public void addDeck(Uri uri) throws IOException, JSONException {
         String deckName = getDeckName(uri);
         String filename = deckName + ".adk";
-        String textDeck = uri2Text(uri);
+
         Deck deck = null;
         if (deckName.substring(deckName.length() -4).equals(".txt")) {
+            String textDeck = uri2Text(uri);
             deck = readTxtDeck(textDeck, deckName, uri);
         } else if (deckName.substring(deckName.length() - 5).equals(".json")){
             deck = loadJsonDeck(uri);
         }
-        SharedPreferences.Editor mDeckListEditor = getDeckList().edit();
+        SharedPreferences.Editor DeckListEditor = getDeckList().edit();
 
-        mDeckListEditor.putString(deckName,filename);
-        mDeckListEditor.apply();
+        DeckListEditor.putString(deckName,filename);
+        DeckListEditor.apply();
+
+        saveDeckToLocal(deck,filename);
+    }
+
+    public void newDeck(String deckName) throws IOException {
+        String filename = deckName + ".adk";
+        Deck deck = new Deck(deckName);
+
+        SharedPreferences.Editor DeckListEditor = getDeckList().edit();
+
+        DeckListEditor.putString(deckName,filename);
+        DeckListEditor.apply();
 
         saveDeckToLocal(deck,filename);
     }

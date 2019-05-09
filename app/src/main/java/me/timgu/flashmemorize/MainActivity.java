@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +28,8 @@ import java.io.IOException;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MainActivity extends AppCompatActivity
-        implements MainListAdapter.OnListActionListener{
+        implements MainListAdapter.OnListActionListener,
+        NewDeckDialogueFragment.NewDeckDialogueListener {
     private static final int READ_REQUEST_CODE = 6936;
     public static final String EXTRA_FILENAME =
             "me.timgu.flashmemorize.extra.FILENAME";
@@ -119,7 +121,6 @@ public class MainActivity extends AppCompatActivity
             if(resultData != null){
                 uri = resultData.getData();
 
-                try {
                     //processing the uri to file
                     String deckName = mDecksManager.getDeckName(uri);
                     String filename = mDecksManager.getDeckList().getString(deckName,null);
@@ -130,18 +131,10 @@ public class MainActivity extends AppCompatActivity
                         return;
                     }
 
-                    mDecksManager.addDeck(uri);
-                    mDecksManager.getDeckList().getString(deckName,null);
-
                     new LoadDeckTask().execute(uri);
                     //if (filename != null) {
                         //launchflashcard(filename);
                     //}
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -172,8 +165,36 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void newDeck(MenuItem item) {
-
+        DialogFragment dialog = new NewDeckDialogueFragment();
+        dialog.show(getSupportFragmentManager(),"NewDeckDialogue");
     }
+    private class CreateNewDeck extends AsyncTask<String,Void,Void> {
+        protected Void doInBackground(String...deckName){
+            for (String s: deckName){
+                try {
+                    mDecksManager.newDeck(s);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void v){
+            mAdapter.updateDeckList();
+        }
+    }
+
+    @Override
+    public void onNewDeckDialogPositiveClick(DialogFragment dialog, String msg) throws IOException {
+        new CreateNewDeck().execute(msg);
+        dialog.dismiss();
+    }
+    @Override
+    public void onNewDeckDialogNegativeClick(DialogFragment dialog){
+        dialog.dismiss();
+    }
+
 
     // -------------------for MainListAdapter.OnListActionListener-----------------------------
     @Override
