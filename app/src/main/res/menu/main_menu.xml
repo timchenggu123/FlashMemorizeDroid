@@ -29,6 +29,13 @@
                 app:showAsAction="ifRoom|withText">
 
             </item>
+            <item
+                android:id="@+id/menu_rename_deck"
+                android:onClick="renameDeck"
+                android:title="Rename Deck"
+                app:showAsAction="ifRoom|withText">
+
+            </item>
 
         </menu>
     </item>
