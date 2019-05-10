@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ public class MainListAdapter extends
     private Context context;
     private Boolean editMode =false;
     private Boolean exportMode = false;
+    private Boolean renameMode = false;
     public Boolean flashcard_launched = false;
 
     public interface OnListActionListener{
@@ -52,36 +55,57 @@ public class MainListAdapter extends
 
     public void setEditMode(Boolean editMode) {
         this.editMode = editMode;
+        renameMode = false;
+        exportMode = false;
         notifyDataSetChanged();
     }
 
     public void setExportMode(Boolean exportMode){
         this.exportMode = exportMode;
+        renameMode = false;
+        editMode = false;
     }
 
+    public void setRenameMode(Boolean renameMode){
+        this.renameMode = renameMode;
+        editMode = false;
+        exportMode = false;
+        notifyDataSetChanged();
+    }
+
+    public Boolean getRenameMode(){
+        return renameMode;
+    }
 
     class ItemViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, View.OnLongClickListener{
         public final TextView wordItemView;
         public final Button deleteButton;
+        public final EditText editView;
+        public final ImageButton saveButton;
         final MainListAdapter mAdapter;
 
         public ItemViewHolder(View itemView, MainListAdapter adapter){
             super(itemView);
             wordItemView = itemView.findViewById(R.id.main_list_text);
             deleteButton = itemView.findViewById(R.id.main_list_delete);
+            editView = itemView.findViewById(R.id.main_list_edit);
+            saveButton = itemView.findViewById(R.id.main_list_save);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
             deleteButton.setVisibility(View.GONE);
             deleteButton.setOnClickListener(this);
+            editView.setVisibility(View.GONE);
+            saveButton.setVisibility(View.GONE);
+            saveButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
 
             int mPosition = getLayoutPosition();
-            if (v.getId() == R.id.main_list_delete){
+            if (v.getId() == R.id.main_list_delete) {
                 String deckName = mDeckListKeys.get(mPosition);
                 actionListener.deleteDeck(deckName);
 
@@ -89,16 +113,22 @@ public class MainListAdapter extends
                 mDeckListValues.remove(mPosition);
 
                 notifyDataSetChanged();
+            }else if (v.getId() == R.id.main_list_save) {
+                LocalDecksManager ldm = new LocalDecksManager(context);
+                EditText editView = itemView.findViewById(R.id.main_list_edit);
+                ldm.renameDeck(mDeckListKeys.get(mPosition), editView.getText().toString());
+                renameMode = false;
+                updateDeckList();
             }else if (exportMode){
                 LocalDecksManager ldm = new LocalDecksManager(context);
-                String filename = (String) mDeckListValues.get(mPosition);
+                String deckName = (String) mDeckListKeys.get(mPosition);
                 try {
-                    ldm.exportDeck(filename);
+                    ldm.exportDeck(deckName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 exportMode = false;
-            } else if (!flashcard_launched){
+            } else if (!flashcard_launched && ! renameMode){
                 String filename = (String) mDeckListValues.get(mPosition);
                 Toast.makeText(context, "Loading Deck...", Toast.LENGTH_SHORT).show();
 
@@ -124,14 +154,25 @@ public class MainListAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull MainListAdapter.ItemViewHolder itemViewHolder, int i) {
-        String mCurrent = (String) mDeckListKeys.get(i);
-        itemViewHolder.wordItemView.setText(mCurrent);
+        String current = (String) mDeckListKeys.get(i);
+        itemViewHolder.wordItemView.setText(current);
 
         if (editMode){
             itemViewHolder.deleteButton.setVisibility(View.VISIBLE);
             itemViewHolder.deleteButton.setOnClickListener(itemViewHolder);
         } else{
             itemViewHolder.deleteButton.setVisibility(View.GONE);
+        }
+
+        if (renameMode){
+            itemViewHolder.editView.setVisibility(View.VISIBLE);
+            itemViewHolder.editView.setText(current);
+            itemViewHolder.saveButton.setVisibility(View.VISIBLE);
+            itemViewHolder.wordItemView.setVisibility(View.GONE);
+        } else{
+            itemViewHolder.editView.setVisibility(View.GONE);
+            itemViewHolder.saveButton.setVisibility(View.GONE);
+            itemViewHolder.wordItemView.setVisibility(View.VISIBLE);
         }
     }
 

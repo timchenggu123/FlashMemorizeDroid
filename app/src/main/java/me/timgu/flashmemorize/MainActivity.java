@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
 
     //Declare reference constants
     private boolean editMode = true;
+    private boolean renameMode = true;
 
 
     @Override
@@ -193,6 +194,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onNewDeckDialogNegativeClick(DialogFragment dialog){
         dialog.dismiss();
+    }
+
+    public void renameDeck(MenuItem item) {
+        mAdapter.setRenameMode(! mAdapter.getRenameMode());
     }
 
 

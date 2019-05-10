@@ -318,9 +318,9 @@ public class LocalDecksManager {
         return loadJsonDeck(inputStream);
     }
 
-    public void exportDeck(String filename) throws IOException {
-        Deck dk = loadDeck(filename);
-        String tempFilename = filename + ".json";
+    public void exportDeck(String deckName) throws IOException {
+        Deck dk = loadDeck(getDeckList().getString(deckName,""));
+        String tempFilename = deckName + ".json";
         saveDeckToLocalJson(dk,tempFilename);
         File dir = context.getFilesDir();
         final File file = new File(dir, tempFilename);
@@ -334,6 +334,15 @@ public class LocalDecksManager {
                     }
                 })
         .show();
+    }
+
+    public void renameDeck(String oldDeckName, String newDeckName){
+        SharedPreferences.Editor DeckListEditor = getDeckList().edit();
+        String filename = getDeckList().getString(oldDeckName,"");
+        DeckListEditor.remove(oldDeckName);
+        DeckListEditor.putString(newDeckName,filename);
+        DeckListEditor.apply();
+
     }
 
     private void shareFile(File file) {
@@ -354,4 +363,6 @@ public class LocalDecksManager {
 
         context.startActivity(Intent.createChooser(intentShareFile, "Share File"));
     }
+
+
 }
