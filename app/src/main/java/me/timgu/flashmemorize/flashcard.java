@@ -308,6 +308,7 @@ public class flashcard extends AppCompatActivity
     public void shuffleCardsSmartLearn(int n_cards){
         dk.smartShuffle(n_cards);
         cards = dk.getDeck();
+        current_card = 0;
         showCard();
     }
 
@@ -411,6 +412,10 @@ public class flashcard extends AppCompatActivity
 
 
     public void editCard(MenuItem item) {
+        editCard();
+    }
+
+    public void editCard(){
         if (! editMode) {
             canvas.setVisibility(View.GONE);
             button_next.setVisibility(View.GONE);
@@ -518,5 +523,11 @@ public class flashcard extends AppCompatActivity
 
     public void newCard(MenuItem item) {
         dk.cards.add(new Card("","",dk.cards.size(),null,null));
+        dk.shuffle(0,1,0); //reset deck
+        cards = dk.getDeck();
+        current_card = dk.cards.size() -1;  //set newly added card as the current card
+        showCard();//display card;
+        editMode = false;
+        editCard();
     }
 }
