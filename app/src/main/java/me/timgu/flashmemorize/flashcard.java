@@ -527,7 +527,20 @@ public class flashcard extends AppCompatActivity
         cards = dk.getDeck();
         current_card = dk.cards.size() -1;  //set newly added card as the current card
         showCard();//display card;
-        editMode = false;
+        editMode = false; //This might be confusing, but in order to turn on editMode, editMode has to be "false" before calling editCard.
         editCard();
+    }
+
+
+    public void removeCard(MenuItem item) {
+        int id = cards.get(current_card).getId();
+        dk.cards.remove(id);
+        for (int i = 0; i < dk.cards.size(); i++){
+            dk.cards.get(i).setId(i);
+        }
+        dk.shuffle(0,1,0);
+        cards = dk.getDeck();
+        current_card = 0;
+        showCard();
     }
 }

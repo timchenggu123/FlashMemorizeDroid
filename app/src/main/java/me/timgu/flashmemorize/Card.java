@@ -153,9 +153,14 @@ public class Card implements Serializable {
         return id;
     }
 
+    public void setId(int ID){
+        id = ID;
+    }
+
     public void updateStudyTrend(int correct){
         studyTrend.add(correct);
     }
+
 
     public void addPic(Bitmap image){
         if (side == 1){
