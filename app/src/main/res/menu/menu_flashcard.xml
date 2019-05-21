@@ -96,7 +96,6 @@
                 android:title="Remove Current Card"
                 android:onClick="removeCard">
             </item>
-
         </menu>
 
     </item>

@@ -36,6 +36,7 @@ public class MainListAdapter extends
     private Boolean editMode =false;
     private Boolean exportMode = false;
     private Boolean renameMode = false;
+    private Boolean mergeMode = false;
     public Boolean flashcard_launched = false;
 
     public interface OnListActionListener{
@@ -73,6 +74,14 @@ public class MainListAdapter extends
         notifyDataSetChanged();
     }
 
+    public void setMergeMode(Boolean mergeMode){
+        this.mergeMode = mergeMode;
+        editMode = false;
+        exportMode = false;
+        notifyDataSetChanged();
+
+    }
+
     public Boolean getRenameMode(){
         return renameMode;
     }
@@ -83,6 +92,7 @@ public class MainListAdapter extends
         public final Button deleteButton;
         public final EditText editView;
         public final ImageButton saveButton;
+        public final Button mergeButton;
         final MainListAdapter mAdapter;
 
         public ItemViewHolder(View itemView, MainListAdapter adapter){
@@ -91,6 +101,7 @@ public class MainListAdapter extends
             deleteButton = itemView.findViewById(R.id.main_list_delete);
             editView = itemView.findViewById(R.id.main_list_edit);
             saveButton = itemView.findViewById(R.id.main_list_save);
+            mergeButton = itemView.findViewById(R.id.main_list_merge);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -99,6 +110,7 @@ public class MainListAdapter extends
             editView.setVisibility(View.GONE);
             saveButton.setVisibility(View.GONE);
             saveButton.setOnClickListener(this);
+            mergeButton.setOnClickListener(this);
         }
 
         @Override
@@ -119,7 +131,7 @@ public class MainListAdapter extends
                 ldm.renameDeck(mDeckListKeys.get(mPosition), editView.getText().toString());
                 renameMode = false;
                 updateDeckList();
-            }else if (exportMode){
+            }else if (exportMode) {
                 LocalDecksManager ldm = new LocalDecksManager(context);
                 String deckName = (String) mDeckListKeys.get(mPosition);
                 try {
@@ -128,6 +140,8 @@ public class MainListAdapter extends
                     e.printStackTrace();
                 }
                 exportMode = false;
+            }else if (mergeMode){
+                //TODO
             } else if (!flashcard_launched && ! renameMode){
                 String filename = (String) mDeckListValues.get(mPosition);
                 Toast.makeText(context, "Loading Deck...", Toast.LENGTH_SHORT).show();
@@ -173,6 +187,12 @@ public class MainListAdapter extends
             itemViewHolder.editView.setVisibility(View.GONE);
             itemViewHolder.saveButton.setVisibility(View.GONE);
             itemViewHolder.wordItemView.setVisibility(View.VISIBLE);
+        }
+
+        if (mergeMode) {
+            itemViewHolder.mergeButton.setVisibility(View.VISIBLE);
+        }else{
+            itemViewHolder.mergeButton.setVisibility(View.GONE);
         }
     }
 

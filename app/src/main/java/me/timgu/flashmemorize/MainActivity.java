@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent,READ_REQUEST_CODE);
     }
 
+
+
     private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
         protected Void doInBackground(Uri...uri){
             for (Uri u: uri){
@@ -168,6 +170,10 @@ public class MainActivity extends AppCompatActivity
     public void newDeck(MenuItem item) {
         DialogFragment dialog = new NewDeckDialogueFragment();
         dialog.show(getSupportFragmentManager(),"NewDeckDialogue");
+    }
+
+    public void mergeDecks(MenuItem item) {
+        mAdapter.setMergeMode(true);
     }
     private class CreateNewDeck extends AsyncTask<String,Void,Void> {
         protected Void doInBackground(String...deckName){

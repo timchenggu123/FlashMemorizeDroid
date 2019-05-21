@@ -36,6 +36,13 @@
                 app:showAsAction="ifRoom|withText">
 
             </item>
+            <item
+                android:id="@+id/menu_merge_decks"
+                android:onClick="mergeDecks"
+                android:title="Merge Decks"
+                app:showAsAction="ifRoom|withText">
+
+            </item>
 
         </menu>
     </item>
