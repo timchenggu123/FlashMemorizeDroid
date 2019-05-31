@@ -325,25 +325,8 @@ public class LocalDecksManager {
         File dir = context.getFilesDir();
         final File file = new File(dir, tempFilename);
         shareFile(file);
-        new AlertDialog.Builder(context)
-                .setMessage("Export complete")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        file.delete();
-                    }
-                })
-        .show();
     }
 
-    public void renameDeck(String oldDeckName, String newDeckName){
-        SharedPreferences.Editor DeckListEditor = getDeckList().edit();
-        String filename = getDeckList().getString(oldDeckName,"");
-        DeckListEditor.remove(oldDeckName);
-        DeckListEditor.putString(newDeckName,filename);
-        DeckListEditor.apply();
-
-    }
 
     private void shareFile(File file) {
 
@@ -364,5 +347,15 @@ public class LocalDecksManager {
         context.startActivity(Intent.createChooser(intentShareFile, "Share File"));
     }
 
+    public void renameDeck(String oldDeckName, String newDeckName){
+        SharedPreferences.Editor DeckListEditor = getDeckList().edit();
+        String filename = getDeckList().getString(oldDeckName,"");
+        DeckListEditor.remove(oldDeckName);
+        DeckListEditor.putString(newDeckName,filename);
+        DeckListEditor.apply();
+
+    }
 
 }
+
+
