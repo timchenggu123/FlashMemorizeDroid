@@ -20,7 +20,7 @@ FlashMemorize reads a text file and generate a deck from it. The syntax for a te
 4. If you want to insert a picture, you need to first put the image file in the same folder as the .txt file, then in the .txt file, type out **"{MyImage.PNG}"** (replace MyImage.PNG with the file name of your image).
 5. After you are done editing the front side of your first card, hit the **Tab** key (also known as the **\t** character). **Note: You are still on the same line!**
 6. Enter what you want to have on the back side of the card following step 3 & 4.
-7. After you are done editing the back side of your card, hit **Enter** key (also known as the **\n** character). Now you should be one a new line in your .txt file. This will create a new card.
+7. After you are done editing the back side of your card, hit **Enter** key (also known as the **\n** character). Now you should be on a new line in your .txt file. This will create a new card.
 8. Repeat step 2-7 to complete your deck!
 
 ## Opening a deck
