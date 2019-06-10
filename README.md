@@ -2,9 +2,9 @@
 
 Developed using Android Studio
 
-This is the android version of the desktop app FlashMemorize!
+This is the android version of the Windows desktop app FlashMemorize!
 
-The Desktop version can be found [here] (https://github.com/timchenggu123/FlashMemorize) (the desktop version has not been updated in a while, so it lacks some features supported by the Android version. A major update is going to come up soon hopefully).
+The Windows version can be found [here](https://github.com/timchenggu123/FlashMemorize) (the desktop version has not been updated in a while, so it lacks some features supported by the Android version. A major update is going to come up soon hopefully).
 
 ## About
 
@@ -37,4 +37,6 @@ It might take a while for the file to load, please wait with patience. After loa
 
 Tap the deck to open it. Now you can begin studying!
 
+## Exporting your deck
 
+Once you have a deck opened using FlashMemorizeDroid you can export it as a .json file. The .json file contains all the text and pictures as well as your user data. To export the file, navigate to the main screen of the app. Tap the menu icon on the top-right corner. In the drop-down menu, tap "Export Deck". Then, tap the deck you want to export on the main screen. An app selector should show up. Select a method you would like to use to share the .json file!
