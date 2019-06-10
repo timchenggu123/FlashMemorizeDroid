@@ -6,11 +6,11 @@ This is the android version of the desktop app FlashMemorize!
 
 The Desktop version can be found [here] (https://github.com/timchenggu123/FlashMemorize) (the desktop version has not been updated in a while, so it lacks some features supported by the Android version. A major update is going to come up soon hopefully).
 
-##About
+## About
 
 FlashMemorize! is an app that can turn a text file into a deck of flashcards. 
 
-##Creating a deck
+## Creating a deck
 
 FlashMemorize reads a text file and generate a deck from it. The syntax for a text deck is really simple. The following tutorial will create a deck using Notepad on Windows, but you can also create decks using any text editor inluding vim, nano, pico, VS Code, etc. Just make sure your file has a .txt extention.
 
@@ -23,7 +23,7 @@ FlashMemorize reads a text file and generate a deck from it. The syntax for a te
 7. After you are done editing the back side of your card, hit **Enter** key (also known as the **\n** character). Now you should be one a new line in your .txt file. This will create a new card.
 8. Repeat step 2-7 to complete your deck!
 
-##Opening a deck
+## Opening a deck
 
 The are a couple ways you can get your deck file onto your phone.
 
