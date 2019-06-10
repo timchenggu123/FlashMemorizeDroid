@@ -27,7 +27,7 @@ FlashMemorize reads a text file and generate a deck from it. The syntax for a te
 
 The are a couple ways you can get your deck file onto your phone.
 
-The simplest way is to connect your phone via usb, then drag the file into a folder of your choice on your phone. (If you have pictures inlcuded in the deck, make sure to also put them *under the same directory* as the .txt file)
+The simplest way is to connect your phone via usb, then drag the file into a folder of your choice on your phone. (If you have pictures included in the deck, make sure to also put them *under the same directory* as the .txt file)
 
 Alternatively, you could also upload the file into google drive. **Note: The Google Drive works with the default android file manager. If your phone uses a custome file manager, this might not work. Moreover, Google Drive methdod does not support pictures.**
 
