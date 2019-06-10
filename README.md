@@ -29,12 +29,12 @@ The are a couple ways you can get your deck file onto your phone.
 
 The simplest way is to connect your phone via usb, then drag the file into a folder of your choice on your phone. (If you have pictures included in the deck, make sure to also put them *under the same directory* as the .txt file)
 
-Alternatively, you could also upload the file into google drive. **Note: The Google Drive works with the default android file manager. If your phone uses a custome file manager, this might not work. Moreover, Google Drive methdod does not support pictures.**
+Alternatively, you could also upload the file on google drive. **Note: The Google Drive method works with the default android file manager on newer versions of the Android system. If your phone uses a custom file manager, this might not work. Moreover, Google Drive method does not support pictures.**
 
-Onec you have the file one your phone or on google drive, you can launch FlashMemorize on your phone. On the main screen, tap the cicular "+" floating button. This should open the file manager. Navigate to your file and tap it. 
+Once you have the file on your phone or on google drive, you can launch FlashMemorize on your phone. On the main screen, tap the cicular "+" floating button. This should open the file manager. Navigate to your file and tap it. 
 
 It might take a while for the file to load, please wait with patience. After loading is complete, you should see the deck on the main screen.
 
-Tap the deck to open!
+Tap the deck to open it. Now you can begin studying!
 
 
