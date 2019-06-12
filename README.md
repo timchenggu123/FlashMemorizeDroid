@@ -14,7 +14,7 @@ FlashMemorize! is an app that can turn a text file into a deck of flashcards.
 
 FlashMemorize reads a text file and generate a deck from it. The syntax for a text deck is really simple. The following tutorial will create a deck using Notepad on Windows, but you can also create decks using any text editor inluding vim, nano, pico, VS Code, etc. Just make sure your file has a .txt extention.
 
-1. Create a .txt file, name it however you like, then open it. 
+1. On your computer, create a .txt file, name it however you like, then open it. 
 2. Write down what you want to have on the front side of your first flashcard. 
 3. If you want to insert a new line on the front side, instead of hitting *enter*, type **" -"** (without the quotation marks, and **with a space** in front of the dash). This is the equivalent of a new line character. Note, if you want to type out a bullet list, you can simply type **" --"** which will display *one* dash at the start of a new line
 4. If you want to insert a picture, you need to first put the image file in the same folder as the .txt file, then in the .txt file, type out **"{MyImage.PNG}"** (replace MyImage.PNG with the file name of your image).
