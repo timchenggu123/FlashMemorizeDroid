@@ -29,7 +29,7 @@ The are a couple ways you can get your deck file onto your phone.
 
 The simplest way is to connect your phone via usb, then drag the file into a folder of your choice on your phone. (If you have pictures included in the deck, make sure to also put them *under the same directory* as the .txt file)
 
-Alternatively, you could also upload the file on google drive. **Note: The Google Drive method works with the default android file manager on newer versions of the Android system. If your phone uses a custom file manager, this might not work. Moreover, Google Drive method does not support pictures.**
+Alternatively, you could also upload the file on Google Drive. **Note: The Google Drive method works with the default android file manager on newer versions of the Android system. If your phone uses a custom file manager, this might not work. Moreover, Google Drive method does not be able to automatically add pictures yet, but you can add them from your phone once you load the deck.**
 
 Once you have the file on your phone or on google drive, you can launch FlashMemorize on your phone. On the main screen, tap the cicular "+" floating button. This should open the file manager. Navigate to your file and tap it. 
 
@@ -39,4 +39,4 @@ Tap the deck to open it. Now you can begin studying!
 
 ## Exporting your deck
 
-Once you have a deck opened using FlashMemorizeDroid you can export it as a .json file. The .json file contains all the text and pictures as well as your user data. To export the file, navigate to the main screen of the app. Tap the menu icon on the top-right corner. In the drop-down menu, tap "Export Deck". Then, tap the deck you want to export on the main screen. An app selector should show up. Select a method you would like to use to share the .json file!
+Once you have a deck opened using FlashMemorizeDroid you can export it as a .json file. The .json file contains all the text and pictures as well as your user data and can be used across devices. To export the file, navigate to the main screen of the app. Tap the menu icon on the top-right corner. In the drop-down menu, tap "Export Deck". Then, tap the deck you want to export on the main screen. An app selector should show up. Select a method you would like to use to share the .json file!
