@@ -356,6 +356,27 @@ public class LocalDecksManager {
 
     }
 
+    public void mergeDecks(List<String> mergeList,String deckName) throws IOException {
+        Deck resultDeck = new Deck(deckName);
+        int ID = 0;
+        for (String deck: mergeList){
+            String deckFile = getDeckList().getString(deck,"");
+            Deck dk = loadDeck(deckFile);
+            for(Card c: dk.cards){
+                c.setId(ID);
+                ID++;
+                resultDeck.cards.add(c);
+            }
+        }
+        resultDeck.cards.remove(0);
+        String filename = deckName + ".adk";
+        SharedPreferences.Editor DeckListEditor = getDeckList().edit();
+
+        DeckListEditor.putString(deckName,filename);
+        DeckListEditor.apply();
+        resultDeck.shuffle(0,1,0);
+        saveDeckToLocal(resultDeck,filename);
+    }
 }
 
 

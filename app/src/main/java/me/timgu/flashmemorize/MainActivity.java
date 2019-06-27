@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume(){
         super.onResume();
         mAdapter.flashcard_launched = false;
+        mAdapter.updateDeckList();
     }
 
 
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(String... strings) {
             for (String filename: strings){
-                Intent intent = new Intent(getContext(),flashcard.class);
+                Intent intent = new Intent(getContext(), FlashcardActivity.class);
                 intent.putExtra(EXTRA_FILENAME,filename);
                 startActivity(intent);
             }
@@ -173,7 +174,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void mergeDecks(MenuItem item) {
-        mAdapter.setMergeMode(true);
+        Intent intent = new Intent(this, MergeListActivity.class);
+        startActivity(intent);
     }
     private class CreateNewDeck extends AsyncTask<String,Void,Void> {
         protected Void doInBackground(String...deckName){

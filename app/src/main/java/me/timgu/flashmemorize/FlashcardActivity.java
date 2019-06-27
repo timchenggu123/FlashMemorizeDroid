@@ -1,10 +1,7 @@
 package me.timgu.flashmemorize;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,7 +18,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,15 +26,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public class flashcard extends AppCompatActivity
+public class FlashcardActivity extends AppCompatActivity
                 implements  FlashcardDialogFragment.FlashcardDialogListener{
     public List<Card> cards;
     public Deck dk;
@@ -99,7 +92,7 @@ public class flashcard extends AppCompatActivity
         button_cancel.setVisibility(View.GONE);
         button_done.setVisibility(View.GONE);
 
-        canvas.setOnTouchListener(new OnSwipeTouchListener(flashcard.this) {
+        canvas.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
             }
@@ -110,7 +103,7 @@ public class flashcard extends AppCompatActivity
                 flipCard();
             }
         });
-        flip.setOnTouchListener(new OnSwipeTouchListener(flashcard.this) {
+        flip.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
             }
@@ -121,7 +114,7 @@ public class flashcard extends AppCompatActivity
                 flipCard();
             }
         });
-        image_display.setOnTouchListener(new OnSwipeTouchListener(flashcard.this) {
+        image_display.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
             }
@@ -147,6 +140,7 @@ public class flashcard extends AppCompatActivity
             e.printStackTrace();
         }*/
         cards = dk.getDeck();
+
         showCard();
         showDeckStats();
     }
