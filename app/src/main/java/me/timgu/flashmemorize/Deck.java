@@ -269,7 +269,6 @@ public class Deck implements Serializable {
 
     public void randomFlip(){randomFlip(1);}
 
-    //public void append(self,cards){}
 
     public List<Card> getDeck(){
         int nCards = order.length;

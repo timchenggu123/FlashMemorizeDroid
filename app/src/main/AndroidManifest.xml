@@ -11,6 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".MergeListActivity"></activity>
+
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/files_paths" />
@@ -26,7 +28,7 @@
         </provider>
 
         <activity
-            android:name=".flashcard"
+            android:name=".FlashcardActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <meta-data
