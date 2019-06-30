@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
             "me.timgu.flashmemorize.extra.FILENAME";
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS =
             66;
+    public static final int MERGE_LIST_REQUEST_CODE = 1313;
 
     //Declare RecyclerView
     private RecyclerView mRecyclerView;
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity
 
     public void mergeDecks(MenuItem item) {
         Intent intent = new Intent(this, MergeListActivity.class);
+        intent.putExtra("REQUEST_CODE", MERGE_LIST_REQUEST_CODE);
         startActivity(intent);
     }
     private class CreateNewDeck extends AsyncTask<String,Void,Void> {

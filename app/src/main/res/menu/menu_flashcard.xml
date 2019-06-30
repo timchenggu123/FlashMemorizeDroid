@@ -96,6 +96,14 @@
                 android:title="Remove Current Card"
                 android:onClick="removeCard">
             </item>
+
+            <item
+                android:id="@+id/menu_flashcard_add_to_deck"
+                app:showAsAction="ifRoom|withText"
+                android:title="Add to deck"
+                android:onClick="removeCard">
+            </item>
+
         </menu>
 
     </item>

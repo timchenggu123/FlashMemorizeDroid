@@ -32,9 +32,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class FlashcardActivity extends AppCompatActivity
-                implements  FlashcardDialogFragment.FlashcardDialogListener{
+                implements  FlashcardDialogFragment.FlashcardDialogListener,
+        MergeListActivity.MergeListActivityListener {
     public List<Card> cards;
     public Deck dk;
+    public static final int MERGE_LIST_REQUEST_CODE = 2424;
 
     //Views
     private TextView canvas;
@@ -52,7 +54,7 @@ public class FlashcardActivity extends AppCompatActivity
     private Button button_cancel;
     private Button button_done;
 
-
+    private String mCurrentFile;
     private int current_card = 0;
     private LocalDecksManager mDecksManager;
     private String filename;
@@ -129,7 +131,7 @@ public class FlashcardActivity extends AppCompatActivity
         //Receiving intent from main
         Intent intent = getIntent();
         filename = intent.getStringExtra(MainActivity.EXTRA_FILENAME);
-
+        mCurrentFile = filename;
         //initializing LocalDecksManager
         mDecksManager = new LocalDecksManager(this);
         try {
@@ -536,5 +538,21 @@ public class FlashcardActivity extends AppCompatActivity
         cards = dk.getDeck();
         current_card = 0;
         showCard();
+    }
+
+    @Override
+    public void onMergeListActivityCallBack(List<String> list) throws IOException {
+        for (String deck: list) {
+            if (mDecksManager.getDeckList().getString(deck,"") == mCurrentFile){
+                continue;
+            }else {
+                Deck dk = mDecksManager.loadDeck(mDecksManager.getDeckList().getString(deck, ""));
+                Card card = cards.get(current_card);
+                card.setId(dk.getSize());
+                dk.cards.add(card);
+                mDecksManager.saveDeckToLocal(dk, mDecksManager.getDeckList().getString(deck, ""));
+            }
+        }
+
     }
 }
