@@ -32,8 +32,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FlashcardActivity extends AppCompatActivity
-                implements  FlashcardDialogFragment.FlashcardDialogListener,
-        MergeListActivity.MergeListActivityListener {
+                implements  FlashcardDialogFragment.FlashcardDialogListener {
     public List<Card> cards;
     public Deck dk;
     public static final int MERGE_LIST_REQUEST_CODE = 2424;
@@ -509,6 +508,30 @@ public class FlashcardActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
             }
+        } else if (requestCode == MERGE_LIST_REQUEST_CODE && resultCode == RESULT_OK){
+
+            List<String> list = resultData.getStringArrayListExtra("Deck_List");
+            for (String deck: list) {
+                if (mDecksManager.getDeckList().getString(deck,"").equals(mCurrentFile)){
+                    continue;
+                }else {
+                    Deck dk = null;
+                    try {
+                        dk = mDecksManager.loadDeck(mDecksManager.getDeckList().getString(deck, ""));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Card card = cards.get(current_card);
+                    card.setId(dk.getSize());
+                    dk.cards.add(card);
+                    dk.shuffle(0,1,0);
+                    try {
+                        mDecksManager.saveDeckToLocal(dk, mDecksManager.getDeckList().getString(deck, ""));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 
@@ -540,19 +563,9 @@ public class FlashcardActivity extends AppCompatActivity
         showCard();
     }
 
-    @Override
-    public void onMergeListActivityCallBack(List<String> list) throws IOException {
-        for (String deck: list) {
-            if (mDecksManager.getDeckList().getString(deck,"") == mCurrentFile){
-                continue;
-            }else {
-                Deck dk = mDecksManager.loadDeck(mDecksManager.getDeckList().getString(deck, ""));
-                Card card = cards.get(current_card);
-                card.setId(dk.getSize());
-                dk.cards.add(card);
-                mDecksManager.saveDeckToLocal(dk, mDecksManager.getDeckList().getString(deck, ""));
-            }
-        }
-
+    public void addCardToDeck(MenuItem item) {
+        Intent intent = new Intent(this,MergeListActivity.class );
+        intent.putExtra("REQUEST_CODE",MERGE_LIST_REQUEST_CODE);
+        startActivityForResult(intent,MERGE_LIST_REQUEST_CODE);
     }
 }

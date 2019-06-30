@@ -13,6 +13,7 @@ import android.view.View;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MergeListActivity extends AppCompatActivity
@@ -21,11 +22,7 @@ public class MergeListActivity extends AppCompatActivity
     private MergeListAdapter mAdapter;
     private LocalDecksManager mLdm;
     private int mRequestCode;
-    @Override
 
-    interface MergeListActivityListener{
-        public void onMergeListActivityCallBack(List<String> list) throws IOException;
-    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
@@ -45,8 +42,10 @@ public class MergeListActivity extends AppCompatActivity
             DialogFragment dialog = new NewDeckDialogueFragment();
             dialog.show(getSupportFragmentManager(), "NewDeckDialogue");
         } else if (mRequestCode == FlashcardActivity.MERGE_LIST_REQUEST_CODE){
-            MergeListActivityListener listener = (MergeListActivityListener) getParent();
-            listener.onMergeListActivityCallBack(mAdapter.checkOutList());
+            Intent intent = new Intent();
+            intent.putStringArrayListExtra("Deck_List",(ArrayList<String>) mAdapter.checkOutList());
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
