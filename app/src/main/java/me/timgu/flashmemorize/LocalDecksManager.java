@@ -34,7 +34,9 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -198,7 +200,7 @@ public class LocalDecksManager {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void addDeck(Uri uri) throws IOException, JSONException {
         String deckName = getDeckName(uri);
-        String filename = deckName + ".adk";
+        String filename = generateFileName();
 
         Deck deck = null;
         if (deckName.substring(deckName.length() -4).equals(".txt")) {
@@ -216,7 +218,7 @@ public class LocalDecksManager {
     }
 
     public void newDeck(String deckName) throws IOException {
-        String filename = deckName + ".adk";
+        String filename = generateFileName();
         Deck deck = new Deck(deckName);
 
         SharedPreferences.Editor DeckListEditor = getDeckList().edit();
@@ -369,13 +371,19 @@ public class LocalDecksManager {
             }
         }
         resultDeck.cards.remove(0);
-        String filename = deckName + ".adk";
+        String filename = generateFileName();
         SharedPreferences.Editor DeckListEditor = getDeckList().edit();
 
         DeckListEditor.putString(deckName,filename);
         DeckListEditor.apply();
         resultDeck.shuffle(0,1,0);
         saveDeckToLocal(resultDeck,filename);
+    }
+
+    private String generateFileName(){
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String deckFileName = "ADK_" + timeStamp + "_" + ".adk";
+        return deckFileName;
     }
 }
 
