@@ -2,10 +2,12 @@ package me.timgu.flashmemorize;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
@@ -25,7 +27,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,6 +56,7 @@ public class FlashcardActivity extends AppCompatActivity
     private Button button_next;
     private Button button_cancel;
     private Button button_done;
+    private ProgressBar pBar;
 
     private String mCurrentFile;
     private int current_card = 0;
@@ -60,7 +65,7 @@ public class FlashcardActivity extends AppCompatActivity
 
     private boolean editMode = false;
 
-    private int READ_REQUEST_CODE = 6937;
+    private int IMAGE_SEARCH_REQUEST_CODE = 6937;
 
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -72,6 +77,10 @@ public class FlashcardActivity extends AppCompatActivity
         //assigning toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_flashcard);
         setSupportActionBar(toolbar);
+
+        //assigning progress bar
+        pBar = findViewById(R.id.flashcard_progressBar);
+        pBar.setVisibility(View.GONE);
 
         //Views in normal mode initializing views
         canvas = findViewById(R.id.flashcard_text_canvas);
@@ -155,11 +164,7 @@ public class FlashcardActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        try {
-            mDecksManager.saveDeckToLocal(dk, filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void showCard() {
@@ -222,6 +227,7 @@ public class FlashcardActivity extends AppCompatActivity
         dk.cards.get(curId).timesCorrect += correct;
         dk.cards.get(curId).updateStudyTrend(correct);
 
+        new ApplyDeckChanges(false).execute();
         showDeckStats();
     }
 
@@ -446,6 +452,8 @@ public class FlashcardActivity extends AppCompatActivity
         String txt = text_edit.getText().toString();
         cards.get(current_card).editText(txt);
 
+        new ApplyDeckChanges().execute();
+
         text_edit.setVisibility(View.GONE);
         button_done.setVisibility(View.GONE);
         button_cancel.setVisibility(View.GONE);
@@ -487,7 +495,7 @@ public class FlashcardActivity extends AppCompatActivity
         Intent  intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
-        startActivityForResult(intent,READ_REQUEST_CODE);
+        startActivityForResult(intent,IMAGE_SEARCH_REQUEST_CODE);
     }
 
     @Override
@@ -495,7 +503,7 @@ public class FlashcardActivity extends AppCompatActivity
                                  Intent resultData){
 
         //for addPic method
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if (requestCode == IMAGE_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             Uri uri = null;
             if(resultData != null){
                 uri = resultData.getData();
@@ -503,6 +511,9 @@ public class FlashcardActivity extends AppCompatActivity
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
                     cards.get(current_card).addPic(bitmap);
+
+                    new ApplyDeckChanges().execute();
+
                     showCard();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -537,6 +548,8 @@ public class FlashcardActivity extends AppCompatActivity
 
     public void deletePic(MenuItem item) {
         cards.get(current_card).deletePic();
+
+        new ApplyDeckChanges().execute();
         showCard();
     }
 
@@ -545,6 +558,8 @@ public class FlashcardActivity extends AppCompatActivity
         dk.shuffle(0,1,0); //reset deck
         cards = dk.getDeck();
         current_card = dk.cards.size() -1;  //set newly added card as the current card
+
+        new ApplyDeckChanges().execute();
         showCard();//display card;
         editMode = false; //This might be confusing, but in order to turn on editMode, editMode has to be "false" before calling editCard.
         editCard();
@@ -560,6 +575,8 @@ public class FlashcardActivity extends AppCompatActivity
         dk.shuffle(0,1,0);
         cards = dk.getDeck();
         current_card = 0;
+
+        new ApplyDeckChanges().execute();
         showCard();
     }
 
@@ -567,5 +584,48 @@ public class FlashcardActivity extends AppCompatActivity
         Intent intent = new Intent(this,MergeListActivity.class );
         intent.putExtra("REQUEST_CODE",MERGE_LIST_REQUEST_CODE);
         startActivityForResult(intent,MERGE_LIST_REQUEST_CODE);
+    }
+
+    private Context getActivityContext(){
+        return (Context) this;
+    }
+
+    private class ApplyDeckChanges extends AsyncTask<String,Void,Void>{
+        private Boolean mShowPBar;
+
+        ApplyDeckChanges(Boolean showPBar){
+            mShowPBar = showPBar;
+        }
+
+        ApplyDeckChanges(){
+            mShowPBar = true;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                mDecksManager.saveDeckToLocal(dk, filename);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (mShowPBar){
+                pBar.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mShowPBar){
+                pBar.setVisibility(View.GONE);
+                Toast.makeText(getActivityContext(), "Successfully applied changes!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
