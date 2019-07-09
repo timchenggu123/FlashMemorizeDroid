@@ -55,10 +55,13 @@ public class MergeListActivity extends AppCompatActivity
 
     @Override
     public void onNewDeckDialogPositiveClick(DialogFragment dialog, String msg) throws IOException {
+        //this method will only be called if the merge list activity is called from the main activity.
         List<String> mergeList = mAdapter.checkOutList();
-        mLdm.mergeDecks(mergeList,msg);
-        dialog.dismiss();
-        this.finish();
+        Intent intent = new Intent();
+        intent.putStringArrayListExtra("Deck_List",(ArrayList<String>) mAdapter.checkOutList());
+        intent.putExtra("Deck_Name", msg);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override

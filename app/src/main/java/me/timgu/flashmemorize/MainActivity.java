@@ -20,11 +20,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MainActivity extends AppCompatActivity
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity
     //Declare RecyclerView
     private RecyclerView mRecyclerView;
     private MainListAdapter mAdapter;
-
+    //Declare progress bar
+    private ProgressBar pBar;
     //Declare helper classes
     private LocalDecksManager mDecksManager;
 
@@ -54,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDecksManager = new LocalDecksManager(this);
-
         //initiate task bar
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -64,6 +66,10 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new MainListAdapter(this,mDecksManager.getDeckList().getAll());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //initiate progress bar
+        pBar = findViewById(R.id.main_progressBar);
+        pBar.setVisibility(View.GONE);
 
     }
 
@@ -98,8 +104,15 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    private class LoadDeckTask extends AsyncTask<Uri,Void,Void> {
+    private class AddDeckTask extends AsyncTask<Uri,Void,Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pBar.setVisibility(View.VISIBLE);
+        }
+
         protected Void doInBackground(Uri...uri){
+
             for (Uri u: uri){
                 try {
                     mDecksManager.addDeck(u);
@@ -113,6 +126,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         protected void onPostExecute(Void v){
+            pBar.setVisibility(View.GONE);
             mAdapter.updateDeckList();
         }
     }
@@ -136,15 +150,57 @@ public class MainActivity extends AppCompatActivity
                         return;
                     }
 
-                    new LoadDeckTask().execute(uri);
+                    new AddDeckTask().execute(uri);
                     //if (filename != null) {
                         //launchflashcard(filename);
                     //}
             }
+        } else if (requestCode == MERGE_LIST_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            List<String> list = resultData.getStringArrayListExtra("Deck_List");
+            String deckName = resultData.getStringExtra("Deck_Name");
+            new MergeDeckTask(list,deckName).execute();
         }
     }
 
+    private class MergeDeckTask extends AsyncTask<String,Void,Void>{
+        String mDeckName;
+        List<String> mList;
+
+        MergeDeckTask(List<String> list, String deckName){
+            mDeckName = deckName;
+            mList = list;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(String... lists) {
+            try {
+                mDecksManager.mergeDecks(mList,mDeckName);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pBar.setVisibility(View.GONE);
+            mAdapter.updateDeckList();
+        }
+    }
     private class LaunchDeckTask extends AsyncTask<String,Void,Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected Void doInBackground(String... strings) {
@@ -156,6 +212,11 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pBar.setVisibility(View.GONE);
+        }
     }
 
 
@@ -176,8 +237,8 @@ public class MainActivity extends AppCompatActivity
 
     public void mergeDecks(MenuItem item) {
         Intent intent = new Intent(this, MergeListActivity.class);
-        intent.putExtra("REQUEST_CODE", MERGE_LIST_REQUEST_CODE);
-        startActivity(intent);
+        intent.putExtra("REQUEST_CODE",MainActivity.MERGE_LIST_REQUEST_CODE);
+        startActivityForResult(intent,MainActivity.MERGE_LIST_REQUEST_CODE);
     }
     private class CreateNewDeck extends AsyncTask<String,Void,Void> {
         protected Void doInBackground(String...deckName){
