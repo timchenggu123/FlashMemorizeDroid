@@ -198,7 +198,14 @@ public class FlashcardActivity extends AppCompatActivity
         /*this is a mutator that changes the current_card variable;
         It is how we can navigate through the deck;
          */
-        //needs more work;
+        //If in edit mode, save changes before moving on
+        if (editMode){
+            String txt = text_edit.getText().toString();
+            cards.get(current_card).editText(txt);
+
+            new ApplyDeckChanges(false).execute();
+        }
+        //
         int nCards = dk.getSize();
         current_card = current_card + step;
         //Toast.makeText(this, Integer.toString(current_card), Toast.LENGTH_SHORT).show();
@@ -273,6 +280,14 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void flipCard() {
+        //if in edit mode, save changes before flip
+        if (editMode){
+            String txt = text_edit.getText().toString();
+            cards.get(current_card).editText(txt);
+
+            new ApplyDeckChanges(false).execute();
+        }
+        //---------------------------------
         cards.get(current_card).flip();
         showCard();
     }
@@ -419,8 +434,6 @@ public class FlashcardActivity extends AppCompatActivity
     public void editCard(){
         if (! editMode) {
             canvas.setVisibility(View.GONE);
-            button_next.setVisibility(View.GONE);
-            button_prev.setVisibility(View.GONE);
             button_bad.setVisibility(View.GONE);
             button_good.setVisibility(View.GONE);
 
@@ -437,8 +450,6 @@ public class FlashcardActivity extends AppCompatActivity
             button_cancel.setVisibility(View.GONE);
 
             canvas.setVisibility(View.VISIBLE);
-            button_next.setVisibility(View.VISIBLE);
-            button_prev.setVisibility(View.VISIBLE);
             button_bad.setVisibility(View.VISIBLE);
             button_good.setVisibility(View.VISIBLE);
 
