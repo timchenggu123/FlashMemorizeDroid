@@ -69,17 +69,23 @@ public class LocalDecksManager {
         return stringBuilder.toString();
     }
 
-    public Deck readTxtDeck(String deck,String name,Uri uri){
+    private String file2txt(File file) throws IOException{
+        InputStream inputStream = new FileInputStream(file);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while((line = reader.readLine()) != null){
+            line += (char) 10;
+            stringBuilder.append(line);
+        }
+        reader.close();
+        return stringBuilder.toString();
+    }
+
+    public Deck readTxtDeck(String deck,String name, File parentFolder){
         Scanner scanner = new Scanner(deck);
         String line;
         int indx;
-        String str = uri.getPath();
-        File f = new File(str);
-        f = f.getParentFile();
-        String parentFolder = f.toString();
-        parentFolder = parentFolder.replaceAll("/document/raw:","");
-
-
 
         String front;
         String back;
@@ -98,8 +104,7 @@ public class LocalDecksManager {
                 int bracket2 = front.indexOf("}");
                 if (bracket1 >= 0 && bracket2 >= 0){
                     String file = front.substring(bracket1 + 1, bracket2);
-                    file = parentFolder + "/" + file;
-                    front_pic_file = new File(file);
+                    front_pic_file = new File(parentFolder,file);
                 }
 
                 File back_pic_file = null;
@@ -108,8 +113,7 @@ public class LocalDecksManager {
                 bracket2 = back.indexOf("}");
                 if (bracket1 >= 0 && bracket2 >= 0){
                     String file = back.substring(bracket1 + 1, bracket2);
-                    file = parentFolder + "/" + file;
-                    back_pic_file = new File(file);
+                    back_pic_file = new File(parentFolder,file);
                 }
 
                 //front = front.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10)); //will this work?
@@ -121,6 +125,16 @@ public class LocalDecksManager {
         }
         Deck dk = new Deck(name,all_cards);
         return dk;
+    }
+
+    public Deck readTxtDeck(String deck,String name,Uri uri){
+        String str = uri.getPath();
+        File f = new File(str);
+        f = f.getParentFile();
+        String parentFolder = f.toString();
+        parentFolder = parentFolder.replaceAll("/document/raw:","");
+
+        return readTxtDeck(deck, name, new File(parentFolder));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -206,8 +220,16 @@ public class LocalDecksManager {
         if (deckName.substring(deckName.length() -4).equals(".txt")) {
             String textDeck = uri2Text(uri);
             deck = readTxtDeck(textDeck, deckName, uri);
-        } else if (deckName.substring(deckName.length() - 5).equals(".json")){
+        } else if (deckName.substring(deckName.length() - 5).equals(".json"))
+        {
             deck = loadJsonDeck(uri);
+        } else if (deckName.substring(deckName.length() - 4).equals(".zip")){
+            deck = loadZipDeck(uri);
+            //delete cache
+            try {
+                File dir = context.getCacheDir();
+                deleteDir(dir);
+            } catch (Exception e) { e.printStackTrace();}
         }
         SharedPreferences.Editor DeckListEditor = getDeckList().edit();
 
@@ -229,6 +251,24 @@ public class LocalDecksManager {
         saveDeckToLocal(deck,filename);
     }
 
+    private static boolean deleteDir(File dir) {
+        //this is a helper function mainly used to delete
+        //cache right now
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if(dir!= null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     public void removeDeck(String deckName){
@@ -239,6 +279,7 @@ public class LocalDecksManager {
         File dir = context.getFilesDir();
         File file = new File(dir, filename);
         file.delete();
+
     }
 
 
@@ -318,6 +359,21 @@ public class LocalDecksManager {
     public Deck loadJsonDeck(Uri uri) throws FileNotFoundException, JSONException {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         return loadJsonDeck(inputStream);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public Deck loadZipDeck(Uri uri) throws IOException {
+        String folderName = generateFileName();
+
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        ZipHandler zh = new ZipHandler(inputStream,folderName,context);
+        zh.unzip();
+
+
+        String filename = getDeckName(uri);
+        filename = filename.substring(0,filename.length()-4) + ".txt";
+        File file = new File(context.getCacheDir(),filename);
+        return readTxtDeck(file2txt(file),getDeckName(uri),context.getCacheDir());
     }
 
     public void exportDeck(String deckName) throws IOException {

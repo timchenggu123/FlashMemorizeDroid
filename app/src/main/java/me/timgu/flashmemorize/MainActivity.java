@@ -145,7 +145,8 @@ public class MainActivity extends AppCompatActivity
                     String filename = mDecksManager.getDeckList().getString(deckName,null);
 
                     if (!(deckName.substring(deckName.length() -4).equals(".txt") ||
-                            deckName.substring(deckName.length() - 5).equals(".json"))) {
+                            deckName.substring(deckName.length() - 5).equals(".json")||
+                            deckName.substring(deckName.length() - 4).equals(".zip"))) {
                         Toast.makeText(this,"File Format Not Supported",Toast.LENGTH_SHORT).show();
                         return;
                     }
