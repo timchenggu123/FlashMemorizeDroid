@@ -43,5 +43,8 @@ public class ImageViewActivity extends AppCompatActivity {
         PhotoView photoView = (PhotoView) findViewById(R.id.imageView_photoView);
         photoView.setImageBitmap(pic.bitmap);
 
+        //clearing cache
+        LocalDecksManager ldm = new LocalDecksManager(this);
+        ldm.clearCache();
     }
 }

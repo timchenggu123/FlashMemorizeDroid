@@ -227,10 +227,7 @@ public class LocalDecksManager {
         } else if (deckName.substring(deckName.length() - 4).equals(".zip")){
             deck = loadZipDeck(uri);
             //delete cache
-            try {
-                File dir = context.getCacheDir();
-                deleteDir(dir);
-            } catch (Exception e) { e.printStackTrace();}
+            clearCache();
         }
         SharedPreferences.Editor DeckListEditor = getDeckList().edit();
 
@@ -441,6 +438,13 @@ public class LocalDecksManager {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String deckFileName = "ADK_" + timeStamp + "_" + ".adk";
         return deckFileName;
+    }
+
+    public void clearCache(){
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) { e.printStackTrace();}
     }
 
     public String saveImageToCache(Bitmap pic) {
