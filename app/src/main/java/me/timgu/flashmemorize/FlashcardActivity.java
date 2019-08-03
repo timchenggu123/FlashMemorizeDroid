@@ -42,26 +42,26 @@ public class FlashcardActivity extends AppCompatActivity
     public static final int MERGE_LIST_REQUEST_CODE = 2424;
 
     //Views
-    private TextView canvas;
-    private TextView flip;
-    private TextView id_display;
-    private TextView total_cards_display;
-    private TextView side_display;
-    private ImageView image_display;
-    private EditText text_edit;
-    private PopupWindow stats_popupWindow;
-    private Button button_good;
-    private Button button_bad;
-    private Button button_prev;
-    private Button button_next;
-    private Button button_cancel;
-    private Button button_done;
-    private ProgressBar pBar;
+    private TextView mCanvas;
+    private TextView mFlip;
+    private TextView mId_display;
+    private TextView mTotal_cards_display;
+    private TextView mSide_display;
+    private ImageView mImage_display;
+    private EditText mText_edit;
+    private PopupWindow mStats_popupWindow;
+    private Button mButton_good;
+    private Button mButton_bad;
+    private Button mButton_prev;
+    private Button mButton_next;
+    private Button mButton_cancel;
+    private Button mButton_done;
+    private ProgressBar mPBar;
 
     private String mCurrentFile;
     private int current_card = 0;
     private LocalDecksManager mDecksManager;
-    private String filename;
+    private String mFilename;
 
     private boolean editMode = false;
 
@@ -79,30 +79,30 @@ public class FlashcardActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //assigning progress bar
-        pBar = findViewById(R.id.flashcard_progressBar);
-        pBar.setVisibility(View.GONE);
+        mPBar = findViewById(R.id.flashcard_progressBar);
+        mPBar.setVisibility(View.GONE);
 
         //Views in normal mode initializing views
-        canvas = findViewById(R.id.flashcard_text_canvas);
-        flip = findViewById(R.id.flashcard_text_flip);
-        text_edit = findViewById(R.id.flashcard_text_edit);
-        id_display = findViewById(R.id.flashcard_display_id_value);
-        total_cards_display = findViewById(R.id.flashcard_display_totalcards_value);
-        side_display = findViewById(R.id.flashcard_display_side_value);
-        image_display = findViewById(R.id.flashcard_image_display);
-        button_good = findViewById(R.id.flashcard_button_good);
-        button_bad = findViewById(R.id.flashcard_button_bad);
-        button_next = findViewById(R.id.flashcard_button_next);
-        button_prev = findViewById(R.id.flashcard_button_prev);
-        button_cancel = findViewById(R.id.flashcard_button_cancel);
-        button_done = findViewById(R.id.flashcard_button_done);
+        mCanvas = findViewById(R.id.flashcard_text_canvas);
+        mFlip = findViewById(R.id.flashcard_text_flip);
+        mText_edit = findViewById(R.id.flashcard_text_edit);
+        mId_display = findViewById(R.id.flashcard_display_id_value);
+        mTotal_cards_display = findViewById(R.id.flashcard_display_totalcards_value);
+        mSide_display = findViewById(R.id.flashcard_display_side_value);
+        mImage_display = findViewById(R.id.flashcard_image_display);
+        mButton_good = findViewById(R.id.flashcard_button_good);
+        mButton_bad = findViewById(R.id.flashcard_button_bad);
+        mButton_next = findViewById(R.id.flashcard_button_next);
+        mButton_prev = findViewById(R.id.flashcard_button_prev);
+        mButton_cancel = findViewById(R.id.flashcard_button_cancel);
+        mButton_done = findViewById(R.id.flashcard_button_done);
 
         //--Views in editing mode
-        text_edit.setVisibility(View.GONE);
-        button_cancel.setVisibility(View.GONE);
-        button_done.setVisibility(View.GONE);
+        mText_edit.setVisibility(View.GONE);
+        mButton_cancel.setVisibility(View.GONE);
+        mButton_done.setVisibility(View.GONE);
 
-        canvas.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
+        mCanvas.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
             }
@@ -113,7 +113,7 @@ public class FlashcardActivity extends AppCompatActivity
                 flipCard();
             }
         });
-        flip.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
+        mFlip.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
             }
@@ -124,7 +124,7 @@ public class FlashcardActivity extends AppCompatActivity
                 flipCard();
             }
         });
-        image_display.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
+        mImage_display.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
             }
@@ -134,16 +134,24 @@ public class FlashcardActivity extends AppCompatActivity
             public void onTwoTaps() {
                 flipCard();
             }
+            public void onLongTap() {
+                Intent intent = new Intent(getContext(), ImageViewActivity.class);
+                Bitmap pic = cards.get(current_card).showImage();
+                LocalDecksManager ldm = new LocalDecksManager(getContext());
+                String filename = ldm.saveImageToCache(pic);
+                intent.putExtra("image",filename);
+                getContext().startActivity(intent);}
         });
+
 
         //Receiving intent from main
         Intent intent = getIntent();
-        filename = intent.getStringExtra(MainActivity.EXTRA_FILENAME);
-        mCurrentFile = filename;
+        mFilename = intent.getStringExtra(MainActivity.EXTRA_FILENAME);
+        mCurrentFile = mFilename;
         //initializing LocalDecksManager
         mDecksManager = new LocalDecksManager(this);
         try {
-            dk = mDecksManager.loadDeck(filename);
+            dk = mDecksManager.loadDeck(mFilename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } /*catch (JSONException e) {
@@ -167,6 +175,9 @@ public class FlashcardActivity extends AppCompatActivity
 
     }
 
+    private Context getContext(){
+        return this;
+    }
     public void showCard() {
         //displaying text information
         String text = cards.get(current_card).show();
@@ -174,19 +185,19 @@ public class FlashcardActivity extends AppCompatActivity
         text = text.replaceAll(" -", Character.toString((char) 10) + (char) 10);
         //needs more work;
         if (editMode){
-            text_edit.setText(text);
+            mText_edit.setText(text);
         }else{
-            canvas.setText(text);
+            mCanvas.setText(text);
         }
 
 
         //displaying image
         if (cards.get(current_card).showImage() != null) {
-            image_display.setImageBitmap(
+            mImage_display.setImageBitmap(
                     cards.get(current_card).showImage());
         } else {
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.border_rectangle);
-            image_display.setImageBitmap(bm);
+            mImage_display.setImageBitmap(bm);
         }
         //updating deck stats;
 
@@ -200,7 +211,7 @@ public class FlashcardActivity extends AppCompatActivity
          */
         //If in edit mode, save changes before moving on
         if (editMode){
-            String txt = text_edit.getText().toString();
+            String txt = mText_edit.getText().toString();
             cards.get(current_card).editText(txt);
 
             new ApplyDeckChanges(false).execute();
@@ -254,9 +265,9 @@ public class FlashcardActivity extends AppCompatActivity
             dispSide = "Back";
         }
 
-        side_display.setText(dispSide);
-        id_display.setText(dispId);
-        total_cards_display.setText(dispTotalCards);
+        mSide_display.setText(dispSide);
+        mId_display.setText(dispId);
+        mTotal_cards_display.setText(dispTotalCards);
 
     }
 
@@ -280,9 +291,9 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void flipCard() {
-        //if in edit mode, save changes before flip
+        //if in edit mode, save changes before mFlip
         if (editMode){
-            String txt = text_edit.getText().toString();
+            String txt = mText_edit.getText().toString();
             cards.get(current_card).editText(txt);
 
             new ApplyDeckChanges(false).execute();
@@ -373,7 +384,7 @@ public class FlashcardActivity extends AppCompatActivity
         LayoutInflater inflater =
                 (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View stats_popup = inflater.inflate(R.layout.flashcard_stats_popup,null);
-        stats_popupWindow = new PopupWindow(
+        mStats_popupWindow = new PopupWindow(
                 stats_popup,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -381,7 +392,7 @@ public class FlashcardActivity extends AppCompatActivity
         );
 
         if (Build.VERSION.SDK_INT >= 21){
-            stats_popupWindow.setElevation(10.0f);
+            mStats_popupWindow.setElevation(10.0f);
         }
 
         ImageButton closeButton =
@@ -417,12 +428,12 @@ public class FlashcardActivity extends AppCompatActivity
         closeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                stats_popupWindow.dismiss();
+                mStats_popupWindow.dismiss();
             }
         });
 
         ConstraintLayout parent = (ConstraintLayout) findViewById(R.id.flash_card_constraint);
-        stats_popupWindow.showAtLocation(parent, Gravity.CENTER,0,0);
+        mStats_popupWindow.showAtLocation(parent, Gravity.CENTER,0,0);
 
     }
 
@@ -433,25 +444,25 @@ public class FlashcardActivity extends AppCompatActivity
 
     public void editCard(){
         if (! editMode) {
-            canvas.setVisibility(View.GONE);
-            button_bad.setVisibility(View.GONE);
-            button_good.setVisibility(View.GONE);
+            mCanvas.setVisibility(View.GONE);
+            mButton_bad.setVisibility(View.GONE);
+            mButton_good.setVisibility(View.GONE);
 
-            text_edit.setVisibility(View.VISIBLE);
-            button_done.setVisibility(View.VISIBLE);
-            button_cancel.setVisibility(View.VISIBLE);
+            mText_edit.setVisibility(View.VISIBLE);
+            mButton_done.setVisibility(View.VISIBLE);
+            mButton_cancel.setVisibility(View.VISIBLE);
 
             editMode = true;
             showCard();
 
         }else{
-            text_edit.setVisibility(View.GONE);
-            button_done.setVisibility(View.GONE);
-            button_cancel.setVisibility(View.GONE);
+            mText_edit.setVisibility(View.GONE);
+            mButton_done.setVisibility(View.GONE);
+            mButton_cancel.setVisibility(View.GONE);
 
-            canvas.setVisibility(View.VISIBLE);
-            button_bad.setVisibility(View.VISIBLE);
-            button_good.setVisibility(View.VISIBLE);
+            mCanvas.setVisibility(View.VISIBLE);
+            mButton_bad.setVisibility(View.VISIBLE);
+            mButton_good.setVisibility(View.VISIBLE);
 
             editMode = false;
 
@@ -460,20 +471,20 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void editDone(View view) {
-        String txt = text_edit.getText().toString();
+        String txt = mText_edit.getText().toString();
         cards.get(current_card).editText(txt);
 
         new ApplyDeckChanges().execute();
 
-        text_edit.setVisibility(View.GONE);
-        button_done.setVisibility(View.GONE);
-        button_cancel.setVisibility(View.GONE);
+        mText_edit.setVisibility(View.GONE);
+        mButton_done.setVisibility(View.GONE);
+        mButton_cancel.setVisibility(View.GONE);
 
-        canvas.setVisibility(View.VISIBLE);
-        button_next.setVisibility(View.VISIBLE);
-        button_prev.setVisibility(View.VISIBLE);
-        button_bad.setVisibility(View.VISIBLE);
-        button_good.setVisibility(View.VISIBLE);
+        mCanvas.setVisibility(View.VISIBLE);
+        mButton_next.setVisibility(View.VISIBLE);
+        mButton_prev.setVisibility(View.VISIBLE);
+        mButton_bad.setVisibility(View.VISIBLE);
+        mButton_good.setVisibility(View.VISIBLE);
 
         editMode = false;
 
@@ -481,15 +492,15 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void editCancel(View view) {
-        text_edit.setVisibility(View.GONE);
-        button_done.setVisibility(View.GONE);
-        button_cancel.setVisibility(View.GONE);
+        mText_edit.setVisibility(View.GONE);
+        mButton_done.setVisibility(View.GONE);
+        mButton_cancel.setVisibility(View.GONE);
 
-        canvas.setVisibility(View.VISIBLE);
-        button_next.setVisibility(View.VISIBLE);
-        button_prev.setVisibility(View.VISIBLE);
-        button_bad.setVisibility(View.VISIBLE);
-        button_good.setVisibility(View.VISIBLE);
+        mCanvas.setVisibility(View.VISIBLE);
+        mButton_next.setVisibility(View.VISIBLE);
+        mButton_prev.setVisibility(View.VISIBLE);
+        mButton_bad.setVisibility(View.VISIBLE);
+        mButton_good.setVisibility(View.VISIBLE);
 
         editMode = false;
 
@@ -615,7 +626,7 @@ public class FlashcardActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(String... strings) {
             try {
-                mDecksManager.saveDeckToLocal(dk, filename);
+                mDecksManager.saveDeckToLocal(dk, mFilename);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -626,7 +637,7 @@ public class FlashcardActivity extends AppCompatActivity
         protected void onPreExecute() {
             super.onPreExecute();
             if (mShowPBar){
-                pBar.setVisibility(View.VISIBLE);
+                mPBar.setVisibility(View.VISIBLE);
             }
         }
 
@@ -634,7 +645,7 @@ public class FlashcardActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if (mShowPBar){
-                pBar.setVisibility(View.GONE);
+                mPBar.setVisibility(View.GONE);
                 Toast.makeText(getActivityContext(), "Successfully applied changes!", Toast.LENGTH_SHORT).show();
             }
         }

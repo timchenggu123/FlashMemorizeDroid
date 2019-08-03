@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -440,6 +441,29 @@ public class LocalDecksManager {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String deckFileName = "ADK_" + timeStamp + "_" + ".adk";
         return deckFileName;
+    }
+
+    public String saveImageToCache(Bitmap pic) {
+        String filename = generateFileName();
+        File ImageFile = new File(context.getCacheDir(),filename);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(ImageFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            pic.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return filename;
     }
 }
 

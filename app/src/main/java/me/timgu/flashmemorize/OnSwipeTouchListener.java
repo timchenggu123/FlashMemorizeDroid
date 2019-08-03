@@ -15,6 +15,8 @@ public class OnSwipeTouchListener implements OnTouchListener {
         gestureDetector = new GestureDetector(ctx, new GestureListener());
     }
 
+
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
@@ -35,6 +37,12 @@ public class OnSwipeTouchListener implements OnTouchListener {
             onTwoTaps();
             return true;
         }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            onLongTap();
+        }
+
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             boolean result = false;
@@ -79,6 +87,10 @@ public class OnSwipeTouchListener implements OnTouchListener {
     }
 
     public void onTwoTaps(){
+
+    }
+
+    public void onLongTap(){
 
     }
 }
