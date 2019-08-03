@@ -344,14 +344,14 @@ public class FlashcardActivity extends AppCompatActivity
     public void shuffleCardsRandomFlip(MenuItem item) {
         dk.randomFlip();
         cards = dk.getDeck();
-        current_card = 0;
+        //current_card = 0; //This a removed for improved user experience
         showCard();
     }
 
     public void shuffleCardsAllFront(MenuItem item) {
         dk.randomFlip(0);
         cards = dk.getDeck();
-        current_card = 0;
+        //current_card = 0; //This is removed for improved user experience
         showCard();
     }
 
