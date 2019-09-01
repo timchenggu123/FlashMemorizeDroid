@@ -17,7 +17,7 @@ FlashMemorize reads a text file and generate a deck from it. The syntax for a te
 1. On your computer, create a .txt file, name it however you like, then open it. 
 2. Write down what you want to have on the front side of your first flashcard. 
 3. If you want to insert a new line on the front side, instead of hitting *enter*, type **" -"** (without the quotation marks, and **with a space** in front of the dash). This is the equivalent of a new line character. Note, if you want to type out a bullet list, you can simply type **" --"** which will display *one* dash at the start of a new line
-4. If you want to insert a picture, you need to first put the image file in the same folder as the .txt file, then in the .txt file, type out **"{MyImage.PNG}"** (replace MyImage.PNG with the file name of your image).
+4. If you want to insert a picture, you need to first put the image file in the same folder as the .txt file, then in the .txt file, type out **"{MyImage.PNG}"** (replace MyImage.PNG with the file name of your image). After you are done creating the deck, compress the folder with the .txt file into a **.zip** file. Make sure the **.zip** file has **the same file name** as the **.txt** file. E.g. a zip file containing "myDeck.txt" would be named "myDeck.zip".
 5. After you are done editing the front side of your first card, hit the **Tab** key (also known as the **\t** character). **Note: You are still on the same line!**
 6. Enter what you want to have on the back side of the card following step 3 & 4.
 7. After you are done editing the back side of your card, hit **Enter** key (also known as the **\n** character). Congraduations, you have just finished creating your first card! Now you should be on a new line in your .txt file. This will create a new card.
@@ -27,13 +27,13 @@ FlashMemorize reads a text file and generate a deck from it. The syntax for a te
 
 The are a couple ways you can get your deck file onto your phone.
 
-The simplest way is to connect your phone via usb, then drag the file into a folder of your choice on your phone. (If you have pictures included in the deck, make sure to also put them *under the same directory* as the .txt file)
+The simplest way is to connect your phone via usb, then drag the file into a folder of your choice on your phone. (If you have pictures included in the deck, make sure they are all compressed into a zip file. **Refer to Step 4 of creating decks**)
 
-Alternatively, you could also upload the file on Google Drive. **Note: The Google Drive method works with the default android file manager on newer versions of the Android system. If your phone uses a custom file manager, this might not work. Moreover, Google Drive method does not be able to automatically add pictures yet, but you can add them from your phone once you load the deck.**
+Alternatively, you could also upload the file on Google Drive. **Note: The Google Drive method works with the default android file manager on newer versions of the Android system. If your phone uses a custom file manager, you might need to download the file in your browser first then open it from your file manager in app (the downloaded files are usually located in the Download/Downloads folder). The general idea of this method can be applied to almost any cloud storage services**
 
 Once you have the file on your phone or on google drive, you can launch FlashMemorize on your phone. On the main screen, tap the cicular "+" floating button. This should open the file manager. Navigate to your file and tap it. 
 
-It might take a while for the file to load, please wait with patience. After loading is complete, you should see the deck on the main screen.
+It might take a while for the file to load, please wait with patience. After loading is complete, you should be able to see the deck on the main screen.
 
 Tap the deck to open it. Now you can begin studying!
 
