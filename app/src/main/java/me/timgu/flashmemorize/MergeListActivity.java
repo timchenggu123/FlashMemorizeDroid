@@ -3,7 +3,6 @@ package me.timgu.flashmemorize;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ public class MergeListActivity extends AppCompatActivity
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void confirm(View view) throws IOException {
         if (mRequestCode == MainActivity.MERGE_LIST_REQUEST_CODE) {
             DialogFragment dialog = new NewDeckDialogueFragment();

@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -28,7 +26,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.List;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MainActivity extends AppCompatActivity
         implements MainListAdapter.OnListActionListener,
         NewDeckDialogueFragment.NewDeckDialogueListener {
