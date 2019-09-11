@@ -96,7 +96,7 @@ public class LocalDecksManager {
         while(scanner.hasNextLine()){
             line = scanner.nextLine();
             indx = line.indexOf((char) 9);
-            if (indx >=0){
+
                 front = line.substring(0,indx);
 
                 File front_pic_file = null;
@@ -106,7 +106,7 @@ public class LocalDecksManager {
                     String file = front.substring(bracket1 + 1, bracket2);
                     front_pic_file = new File(parentFolder,file);
                 }
-
+            if (indx >=0){
                 File back_pic_file = null;
                 back = line.substring(indx+1);
                 bracket1 = back.indexOf("{");

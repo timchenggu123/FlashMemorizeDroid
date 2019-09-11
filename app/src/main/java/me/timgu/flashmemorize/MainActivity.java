@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     private class AddDeckTask extends AsyncTask<Uri,Void,Void> {
         @Override
         protected void onPreExecute() {

@@ -152,9 +152,9 @@ public class FlashcardActivity extends AppCompatActivity
             dk = mDecksManager.loadDeck(mFilename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } /*catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        } catch(Exception e){
+            finish();
+        }
         cards = dk.getDeck();
 
         showCard();
@@ -171,6 +171,11 @@ public class FlashcardActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
 
+    }
+
+
+    public void ExitActivity(MenuItem item) {
+        finish();
     }
 
     private Context getContext(){
