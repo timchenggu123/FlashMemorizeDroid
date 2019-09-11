@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -68,7 +67,6 @@ public class FlashcardActivity extends AppCompatActivity
     private int IMAGE_SEARCH_REQUEST_CODE = 6937;
 
     @SuppressLint("ClickableViewAccessibility")
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,9 +152,9 @@ public class FlashcardActivity extends AppCompatActivity
             dk = mDecksManager.loadDeck(mFilename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } /*catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        } catch(Exception e){
+            finish();
+        }
         cards = dk.getDeck();
 
         showCard();
@@ -173,6 +171,11 @@ public class FlashcardActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
 
+    }
+
+
+    public void ExitActivity(MenuItem item) {
+        finish();
     }
 
     private Context getContext(){
@@ -507,12 +510,12 @@ public class FlashcardActivity extends AppCompatActivity
         showCard();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     public void addPic(MenuItem item) {
         performImageSearch();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     public void performImageSearch(){
         Intent  intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);

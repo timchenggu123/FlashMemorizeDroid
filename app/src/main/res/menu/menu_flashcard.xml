@@ -103,6 +103,13 @@
                 android:title="Add to deck"
                 android:onClick="addCardToDeck">
             </item>
+            <item
+                android:id="@+id/menu_home"
+                android:onClick="ExitActivity"
+                android:title="Home"
+                app:showAsAction="ifRoom|withText">
+
+            </item>
 
         </menu>
 

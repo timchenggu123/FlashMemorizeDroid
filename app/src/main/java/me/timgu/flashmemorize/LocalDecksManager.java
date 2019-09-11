@@ -13,7 +13,6 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.OpenableColumns;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 
@@ -97,7 +96,7 @@ public class LocalDecksManager {
         while(scanner.hasNextLine()){
             line = scanner.nextLine();
             indx = line.indexOf((char) 9);
-            if (indx >=0){
+
                 front = line.substring(0,indx);
 
                 File front_pic_file = null;
@@ -107,7 +106,7 @@ public class LocalDecksManager {
                     String file = front.substring(bracket1 + 1, bracket2);
                     front_pic_file = new File(parentFolder,file);
                 }
-
+            if (indx >=0){
                 File back_pic_file = null;
                 back = line.substring(indx+1);
                 bracket1 = back.indexOf("{");
@@ -138,7 +137,6 @@ public class LocalDecksManager {
         return readTxtDeck(deck, name, new File(parentFolder));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public String getDeckName(Uri uri) {
         //***Code not original, retrieved from https://developer.android.com/guide/topics/providers/document-provider#java
 
@@ -212,7 +210,6 @@ public class LocalDecksManager {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void addDeck(Uri uri) throws IOException, JSONException {
         String deckName = getDeckName(uri);
         String filename = generateFileName();
@@ -268,7 +265,6 @@ public class LocalDecksManager {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     public void removeDeck(String deckName){
         String filename = getDeckList().getString(deckName,null);
         SharedPreferences.Editor mDeckListEditor = getDeckList().edit();
@@ -359,7 +355,7 @@ public class LocalDecksManager {
         return loadJsonDeck(inputStream);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+
     public Deck loadZipDeck(Uri uri) throws IOException {
         String folderName = generateFileName();
 
