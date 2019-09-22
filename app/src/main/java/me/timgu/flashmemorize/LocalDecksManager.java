@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +45,7 @@ import java.util.Scanner;
 public class LocalDecksManager {
     private Context context;
     //mDecklist is a shared preference file that stores a list of opened decks
-    public SharedPreferences mDeckList;
+    private SharedPreferences mDeckList;
     private String deckListFile = "me.timgu.decklist";
     //----------------------------------------------------
 
@@ -210,9 +212,8 @@ public class LocalDecksManager {
         }
     }
 
-    public void addDeck(Uri uri) throws IOException, JSONException {
+    public Deck getDeckFromURI(Uri uri) throws IOException, JSONException {
         String deckName = getDeckName(uri);
-        String filename = generateFileName();
 
         Deck deck = null;
         if (deckName.substring(deckName.length() -4).equals(".txt")) {
@@ -226,6 +227,22 @@ public class LocalDecksManager {
             //delete cache
             clearCache();
         }
+        return deck;
+    }
+
+    public void addDeck(Uri uri) throws IOException, JSONException {
+        String deckName = getDeckName(uri);
+        String filename = generateFileName();
+
+        Deck deck = getDeckFromURI(uri);
+
+        addDeck(deck);
+    }
+
+    public void addDeck(Deck deck) throws IOException {
+        String filename = generateFileName();
+        String deckName = deck.name;
+
         SharedPreferences.Editor DeckListEditor = getDeckList().edit();
 
         DeckListEditor.putString(deckName,filename);
@@ -277,7 +294,6 @@ public class LocalDecksManager {
     }
 
 
-    //This method is old way of saving the deck object. Obsolete.
     public Deck loadDeck(String filename) throws FileNotFoundException {
         FileInputStream inputStream;
         Deck deck = null;
@@ -464,6 +480,28 @@ public class LocalDecksManager {
             }
         }
         return filename;
+    }
+
+    public void LoadTutorialDeck() {
+        InputStream fstream = context.getResources().openRawResource(R.raw.a_tiny_tutorial);
+        Deck dk;
+        try {
+             dk = loadJsonDeck(fstream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            addDeck(dk);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
     }
 }
 

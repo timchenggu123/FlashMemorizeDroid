@@ -36,8 +36,8 @@ import java.util.List;
 
 public class FlashcardActivity extends AppCompatActivity
                 implements  FlashcardDialogFragment.FlashcardDialogListener {
-    public List<Card> cards;
-    public Deck dk;
+    public List<Card> mCards;
+    public Deck mDeck;
     public static final int MERGE_LIST_REQUEST_CODE = 2424;
 
     //Views
@@ -58,8 +58,9 @@ public class FlashcardActivity extends AppCompatActivity
     private ProgressBar mPBar;
 
     private String mCurrentFile;
-    private int current_card = 0;
+    private int mCurrentCard = 0;
     private LocalDecksManager mDecksManager;
+    private SettingsManager mSettingsManager;
     private String mFilename;
 
     private boolean editMode = false;
@@ -134,7 +135,7 @@ public class FlashcardActivity extends AppCompatActivity
             }
             public void onLongTap() {
                 Intent intent = new Intent(getContext(), ImageViewActivity.class);
-                Bitmap pic = cards.get(current_card).showImage();
+                Bitmap pic = mCards.get(mCurrentCard).showImage();
                 LocalDecksManager ldm = new LocalDecksManager(getContext());
                 String filename = ldm.saveImageToCache(pic);
                 intent.putExtra("image",filename);
@@ -147,16 +148,22 @@ public class FlashcardActivity extends AppCompatActivity
         mFilename = intent.getStringExtra(MainActivity.EXTRA_FILENAME);
         mCurrentFile = mFilename;
         //initializing LocalDecksManager
+        mSettingsManager = new SettingsManager(this);
         mDecksManager = new LocalDecksManager(this);
         try {
-            dk = mDecksManager.loadDeck(mFilename);
+            mDeck = mDecksManager.loadDeck(mFilename);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            finish();
         } catch(Exception e){
             finish();
+        }finally {
+            finish();
         }
-        cards = dk.getDeck();
+        mCards = mDeck.getDeck();
 
+        //initialize
+        mCanvas.setTextSize(mSettingsManager.getFontSize());
         showCard();
         showDeckStats();
     }
@@ -183,7 +190,7 @@ public class FlashcardActivity extends AppCompatActivity
     }
     public void showCard() {
         //displaying text information
-        String text = cards.get(current_card).show();
+        String text = mCards.get(mCurrentCard).show();
         // somehow " -" 's space gets deleted in XML, have to hardcode it in here
         text = text.replaceAll(" -", Character.toString((char) 10) + (char) 10);
         //needs more work;
@@ -195,40 +202,40 @@ public class FlashcardActivity extends AppCompatActivity
 
 
         //displaying image
-        if (cards.get(current_card).showImage() != null) {
+        if (mCards.get(mCurrentCard).showImage() != null) {
             mImage_display.setImageBitmap(
-                    cards.get(current_card).showImage());
+                    mCards.get(mCurrentCard).showImage());
         } else {
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.border_rectangle);
             mImage_display.setImageBitmap(bm);
         }
         //updating deck stats;
 
-        cards.get(current_card).viewed = 1;
+        mCards.get(mCurrentCard).viewed = 1;
         showDeckStats();
     }
 
     public void moveCurrentCard(int step) {
-        /*this is a mutator that changes the current_card variable;
+        /*this is a mutator that changes the mCurrentCard variable;
         It is how we can navigate through the deck;
          */
         //If in edit mode, save changes before moving on
         if (editMode){
             String txt = mText_edit.getText().toString();
-            cards.get(current_card).editText(txt);
+            mCards.get(mCurrentCard).editText(txt);
 
             new ApplyDeckChanges(false).execute();
         }
         //
-        int nCards = dk.getSize();
-        current_card = current_card + step;
-        //Toast.makeText(this, Integer.toString(current_card), Toast.LENGTH_SHORT).show();
-        if (current_card == nCards) {
-            current_card = 0;
+        int nCards = mDeck.getSize();
+        mCurrentCard = mCurrentCard + step;
+        //Toast.makeText(this, Integer.toString(mCurrentCard), Toast.LENGTH_SHORT).show();
+        if (mCurrentCard == nCards) {
+            mCurrentCard = 0;
             //Toast.makeText(this, "Reached End of Deck", Toast.LENGTH_SHORT).show();
 
-        } else if (current_card < 0) {
-            current_card = dk.getSize() - 1;
+        } else if (mCurrentCard < 0) {
+            mCurrentCard = mDeck.getSize() - 1;
             //Toast.makeText(this, "Reached Beginning of Deck", Toast.LENGTH_SHORT).show();
 
         }
@@ -238,15 +245,15 @@ public class FlashcardActivity extends AppCompatActivity
         //The reason [int correct] here is an int not a bool is for future implementation of different levels of correctness
         //Right now [int correct] should be either 0 or 1;
 
-        if (this.current_card == dk.getSize()) {
-            current_card = current_card - 1;
+        if (this.mCurrentCard == mDeck.getSize()) {
+            mCurrentCard = mCurrentCard - 1;
         }
 
-        int curId = cards.get(current_card).getId(); //gets the id of the card currently on display
+        int curId = mCards.get(mCurrentCard).getId(); //gets the id of the card currently on display
 
-        dk.cards.get(curId).timesStudied++;
-        dk.cards.get(curId).timesCorrect += correct;
-        dk.cards.get(curId).updateStudyTrend(correct);
+        mDeck.cards.get(curId).timesStudied++;
+        mDeck.cards.get(curId).timesCorrect += correct;
+        mDeck.cards.get(curId).updateStudyTrend(correct);
 
         new ApplyDeckChanges(false).execute();
         showDeckStats();
@@ -254,13 +261,13 @@ public class FlashcardActivity extends AppCompatActivity
 
 
     public void showDeckStats() {
-        int curId = cards.get(current_card).getId(); //gets the id of the card currently on display
-        int deckSize = dk.getSize();
+        int curId = mCards.get(mCurrentCard).getId(); //gets the id of the card currently on display
+        int deckSize = mDeck.getSize();
 
-        String dispId = String.valueOf(curId + 1);//+1 here because current_card starts from 0
+        String dispId = String.valueOf(curId + 1);//+1 here because mCurrentCard starts from 0
         String dispTotalCards =
-                String.valueOf(current_card + 1) + '/' + String.valueOf(deckSize);
-        int s = cards.get(current_card).side;
+                String.valueOf(mCurrentCard + 1) + '/' + String.valueOf(deckSize);
+        int s = mCards.get(mCurrentCard).side;
         String dispSide;
         if (s == 1){
             dispSide = "Front";
@@ -297,12 +304,12 @@ public class FlashcardActivity extends AppCompatActivity
         //if in edit mode, save changes before mFlip
         if (editMode){
             String txt = mText_edit.getText().toString();
-            cards.get(current_card).editText(txt);
+            mCards.get(mCurrentCard).editText(txt);
 
             new ApplyDeckChanges(false).execute();
         }
         //---------------------------------
-        cards.get(current_card).flip();
+        mCards.get(mCurrentCard).flip();
         showCard();
     }
 
@@ -324,9 +331,9 @@ public class FlashcardActivity extends AppCompatActivity
 
     public void shuffleCardsNoRepeat(MenuItem item) {
         //needs more work
-        dk.shuffle(1, 0, 0);
-        cards = dk.getDeck();
-        current_card = 0;
+        mDeck.shuffle(1, 0, 0);
+        mCards = mDeck.getDeck();
+        mCurrentCard = 0;
         showCard();
     }
 
@@ -336,9 +343,9 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void shuffleCardsSmartLearn(int n_cards){
-        dk.smartShuffle(n_cards);
-        cards = dk.getDeck();
-        current_card = 0;
+        mDeck.smartShuffle(n_cards);
+        mCards = mDeck.getDeck();
+        mCurrentCard = 0;
         showCard();
     }
 
@@ -356,30 +363,30 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void shuffleCardsRandomFlip(MenuItem item) {
-        dk.randomFlip();
-        cards = dk.getDeck();
-        //current_card = 0; //This a removed for improved user experience
+        mDeck.randomFlip();
+        mCards = mDeck.getDeck();
+        //mCurrentCard = 0; //This a removed for improved user experience
         showCard();
     }
 
     public void shuffleCardsAllFront(MenuItem item) {
-        dk.randomFlip(0);
-        cards = dk.getDeck();
-        //current_card = 0; //This is removed for improved user experience
+        mDeck.randomFlip(0);
+        mCards = mDeck.getDeck();
+        //mCurrentCard = 0; //This is removed for improved user experience
         showCard();
     }
 
     public void shuffleCardsAllBack(MenuItem item) {
-        dk.randomFlip(2);
-        cards = dk.getDeck();
-        current_card = 0;
+        mDeck.randomFlip(2);
+        mCards = mDeck.getDeck();
+        mCurrentCard = 0;
         showCard();
     }
 
     public void shuffleCardsReset(MenuItem item) {
-        dk.shuffle(0, 1, 0);
-        cards = dk.getDeck();
-        current_card = 0;
+        mDeck.shuffle(0, 1, 0);
+        mCards = mDeck.getDeck();
+        mCurrentCard = 0;
         showCard();
     }
 
@@ -404,20 +411,20 @@ public class FlashcardActivity extends AppCompatActivity
                 (TextView) stats_popup.findViewById(R.id.flashcard_stats_popup_text);
 
         String card_accuracy =
-                "Current Card Accuracy: "+String.valueOf((int)(cards.get(current_card).getStats()
+                "Current Card Accuracy: "+String.valueOf((int)(mCards.get(mCurrentCard).getStats()
                         * 100)) + "%";
         String card_times_studied =
-                "Current Card Times Studied: "+String.valueOf(cards.get(current_card).timesStudied);
+                "Current Card Times Studied: "+String.valueOf(mCards.get(mCurrentCard).timesStudied);
         String card_times_correct =
-                "Current Card Times Correct: "+String.valueOf(cards.get(current_card).timesCorrect);
-        double[] deck_stats = dk.getDeckStats();
+                "Current Card Times Correct: "+String.valueOf(mCards.get(mCurrentCard).timesCorrect);
+        double[] deck_stats = mDeck.getDeckStats();
         String deck_accuracy =
                 "Deck Overall Accuracy: "+String.valueOf((int)(deck_stats[0] * 100)) + "%";
         String deck_total_studied  =
                 "Deck Total Times Studied: " + String.valueOf((int) deck_stats[1]);
         String deck_total_viewed =
                 "Unique Cards Viewed After Shuffle: "+String.valueOf((int) deck_stats[2])
-                        + "/" + String.valueOf(dk.getSize(false));
+                        + "/" + String.valueOf(mDeck.getSize(false));
 
         String txt = card_accuracy + (char) 10
                 + card_times_correct + (char) 10
@@ -475,7 +482,7 @@ public class FlashcardActivity extends AppCompatActivity
 
     public void editDone(View view) {
         String txt = mText_edit.getText().toString();
-        cards.get(current_card).editText(txt);
+        mCards.get(mCurrentCard).editText(txt);
 
         new ApplyDeckChanges().execute();
 
@@ -535,7 +542,7 @@ public class FlashcardActivity extends AppCompatActivity
 
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
-                    cards.get(current_card).addPic(bitmap);
+                    mCards.get(mCurrentCard).addPic(bitmap);
 
                     new ApplyDeckChanges().execute();
 
@@ -557,7 +564,7 @@ public class FlashcardActivity extends AppCompatActivity
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    Card card = cards.get(current_card);
+                    Card card = mCards.get(mCurrentCard);
                     card.setId(dk.getSize());
                     dk.cards.add(card);
                     dk.shuffle(0,1,0);
@@ -572,17 +579,17 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void deletePic(MenuItem item) {
-        cards.get(current_card).deletePic();
+        mCards.get(mCurrentCard).deletePic();
 
         new ApplyDeckChanges().execute();
         showCard();
     }
 
     public void newCard(MenuItem item) {
-        dk.cards.add(new Card("","",dk.cards.size(),null,null));
-        dk.shuffle(0,1,0); //reset deck
-        cards = dk.getDeck();
-        current_card = dk.cards.size() -1;  //set newly added card as the current card
+        mDeck.cards.add(new Card("","", mDeck.cards.size(),null,null));
+        mDeck.shuffle(0,1,0); //reset deck
+        mCards = mDeck.getDeck();
+        mCurrentCard = mDeck.cards.size() -1;  //set newly added card as the current card
 
         new ApplyDeckChanges().execute();
         showCard();//display card;
@@ -592,14 +599,14 @@ public class FlashcardActivity extends AppCompatActivity
 
 
     public void removeCard(MenuItem item) {
-        int id = cards.get(current_card).getId();
-        dk.cards.remove(id);
-        for (int i = 0; i < dk.cards.size(); i++){
-            dk.cards.get(i).setId(i);
+        int id = mCards.get(mCurrentCard).getId();
+        mDeck.cards.remove(id);
+        for (int i = 0; i < mDeck.cards.size(); i++){
+            mDeck.cards.get(i).setId(i);
         }
-        dk.shuffle(0,1,0);
-        cards = dk.getDeck();
-        current_card = 0;
+        mDeck.shuffle(0,1,0);
+        mCards = mDeck.getDeck();
+        mCurrentCard = 0;
 
         new ApplyDeckChanges().execute();
         showCard();
@@ -629,7 +636,7 @@ public class FlashcardActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(String... strings) {
             try {
-                mDecksManager.saveDeckToLocal(dk, mFilename);
+                mDecksManager.saveDeckToLocal(mDeck, mFilename);
             } catch (IOException e) {
                 e.printStackTrace();
             }

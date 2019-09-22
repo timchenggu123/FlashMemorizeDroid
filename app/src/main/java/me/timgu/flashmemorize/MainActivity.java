@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar pBar;
     //Declare helper classes
     private LocalDecksManager mDecksManager;
-
+    private SettingsManager mSettingsManager;
     //Declare reference constants
     private boolean editMode = true;
     private boolean renameMode = true;
@@ -53,7 +53,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //initialize helper classes
+        mSettingsManager = new SettingsManager(this);
         mDecksManager = new LocalDecksManager(this);
+
         //initiate task bar
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -68,6 +72,9 @@ public class MainActivity extends AppCompatActivity
         pBar = findViewById(R.id.main_progressBar);
         pBar.setVisibility(View.GONE);
 
+        //initialization procedures
+
+        check_n_load_tutorial();
     }
 
     @Override
@@ -83,13 +90,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //----------------------Accessors--------------------------------------
-
     private Context getContext(){
         return this;
     }
 
-    //----------------------Utility-----------------------------------------
 
     public void performFileSearch(View v){
         requestPermission();
@@ -269,7 +273,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    // -------------------for MainListAdapter.OnListActionListener-----------------------------
     @Override
     public void launchDeck(String filename) {
         new LaunchDeckTask().execute(filename);
@@ -279,7 +282,7 @@ public class MainActivity extends AppCompatActivity
     public void deleteDeck(String deckName) {
         mDecksManager.removeDeck(deckName);
     }
-    // ------------------end for MainListAdapter.OnListActionListener--------------------------
+
     private void requestPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -306,6 +309,14 @@ public class MainActivity extends AppCompatActivity
             // Permission has already been granted
         }
     }
+
+    private void check_n_load_tutorial(){
+        if (mSettingsManager.getFirstTime()){
+            mDecksManager.LoadTutorialDeck();
+            mSettingsManager.setFirstTime();
+        }
+    }
+
 
 }
 
