@@ -1,5 +1,9 @@
 # FlashMemorizeDroid
 
+Coming to Google Play soon!
+
+Download the APK [here](https://drive.google.com/file/d/14sAtLcSB7w27o3-7ZiY6Qe4wkSCokMPi/view?usp=sharing)
+
 Developed using Android Studio
 
 This is the android version of the Windows desktop app FlashMemorize!
