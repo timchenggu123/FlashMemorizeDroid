@@ -7,14 +7,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity
     private SettingsManager mSettingsManager;
     //Declare reference constants
     private boolean editMode = true;
-    private boolean renameMode = true;
 
 
     @Override
@@ -134,32 +133,33 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData){
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+                                 Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri uri = null;
-            if(resultData != null){
+            if (resultData != null) {
                 uri = resultData.getData();
 
-                    //processing the uri to file
-                    String deckName = mDecksManager.getDeckName(uri);
-                    String filename = mDecksManager.getDeckList().getString(deckName,null);
+                //processing the uri to file
+                String deckName = mDecksManager.getDeckName(uri);
 
-                    if (!(deckName.substring(deckName.length() -4).equals(".txt") ||
-                            deckName.substring(deckName.length() - 5).equals(".json")||
-                            deckName.substring(deckName.length() - 4).equals(".zip"))) {
-                        Toast.makeText(this,"File Format Not Supported",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if (!(deckName.substring(deckName.length() - 4).equals(".txt") ||
+                        deckName.substring(deckName.length() - 5).equals(".json") ||
+                        deckName.substring(deckName.length() - 4).equals(".zip"))) {
+                    Toast.makeText(this, "File Format Not Supported", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    new AddDeckTask().execute(uri);
-                    //if (filename != null) {
-                        //launchflashcard(filename);
-                    //}
+                new AddDeckTask().execute(uri);
+                //if (filename != null) {
+                //launchflashcard(filename);
+                //}
             }
-        } else if (requestCode == MERGE_LIST_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        } else if (requestCode == MERGE_LIST_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             List<String> list = resultData.getStringArrayListExtra("Deck_List");
             String deckName = resultData.getStringExtra("Deck_Name");
-            new MergeDeckTask(list,deckName).execute();
+            new MergeDeckTask(list, deckName).execute();
         }
     }
 
@@ -316,6 +316,12 @@ public class MainActivity extends AppCompatActivity
             mSettingsManager.setFirstTime();
         }
     }
+
+    public void LaunchSettings(MenuItem item) {
+        Intent intent = new Intent (getContext(), SettingsActivity.class);
+        startActivity(intent);
+    }
+
 
 
 }

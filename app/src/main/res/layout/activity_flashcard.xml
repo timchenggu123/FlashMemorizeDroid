@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id = "@+id/flash_card_constraint"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,16 +22,16 @@
         app:layout_constraintTop_toTopOf="parent"
         android:indeterminate="true"/>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_flashcard"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/design_default_color_primary"
+        android:background="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AppTheme"
         app:titleTextColor="@android:color/white"
         tools:layout_editor_absoluteX="0dp">
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
     <LinearLayout
@@ -144,28 +144,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="prevCard"
-            android:text="@string/button_prev" />
+            android:text="@string/button_prev"
+            android:background="@color/cardview_light_background"/>
 
         <Button
             android:id="@+id/flashcard_button_good"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="goodCard"
-            android:text="@string/button_good" />
+            android:text="@string/button_good"
+            android:background="#c6fc74"/>
 
         <Button
             android:id="@+id/flashcard_button_bad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="badCard"
-            android:text="@string/button_bad" />
+            android:text="@string/button_bad"
+            android:background="#fc74d1"/>
 
         <Button
             android:id="@+id/flashcard_button_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="nextCard"
-            android:text="@string/button_next" />
+            android:text="@string/button_next"
+            android:background="#c9faff"/>
 
         <Button
             android:id="@+id/flashcard_button_done"
@@ -173,7 +177,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:onClick="editDone"
-            android:text="@string/flashcard_button_done" />
+            android:text="@string/flashcard_button_done"
+            android:background="@color/cardview_light_background"/>
 
         <Button
             android:id="@+id/flashcard_button_cancel"
@@ -181,7 +186,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:onClick="editCancel"
-            android:text="@string/flashcard_button_cancel" />
+            android:text="@string/flashcard_button_cancel"
+            android:background="@color/cardview_light_background"/>
 
     </LinearLayout>
 
@@ -279,4 +285,4 @@
     </ScrollView>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

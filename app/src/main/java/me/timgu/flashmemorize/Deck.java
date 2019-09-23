@@ -63,7 +63,7 @@ public class Deck implements Serializable {
             e.printStackTrace();
         }
         try{
-            JSONObject card_objects = obj.getJSONObject("mCards");
+            JSONObject card_objects = obj.getJSONObject("cards");
             for (int i = 0; i < card_objects.length(); i++){
                 Card card =
                         new Card(card_objects.getJSONObject(Integer.toString(i)));
@@ -99,7 +99,7 @@ public class Deck implements Serializable {
                 cards_obj.put(Integer.toString(indx), card.onSave());
                 indx++;
             }
-            obj.put("mCards",cards_obj);
+            obj.put("cards",cards_obj);
             return obj;
         } catch(JSONException e){
             e.printStackTrace();
@@ -113,24 +113,27 @@ public class Deck implements Serializable {
     }
 
 
-    public void smartShuffle(int n_cards){
+    public void smartShuffle(int n_cards, double appearance_rate){
         //
-        shuffle(Deck.SHUFFLE_MODE_YES_REPEAT,0,0,n_cards);
+        shuffle(Deck.SHUFFLE_MODE_YES_REPEAT,0,0,n_cards,appearance_rate);
     }
 
-
-    public void shuffle(int mode, int reset, int draw, int n_cards){
+    public void shuffle (int mode, int reset, int draw, int n_cards){
+        /*this sets default value for appearance rate*/
+        shuffle(mode, reset, draw, n_cards, 0.1);
+    }
+    public void shuffle(int mode, int reset, int draw, int n_cards, double appearance_rate){
     /*
 
-    #Shuffle the deck. Mode = 1 shuffle a deck of ncards with every card included exactly once. All mCards
-    #having any other value will result in the deck shuffling mCards based on the accuracy of each card. Draw = 1
+    #Shuffle the deck. Mode = 1 shuffle a deck of ncards with every card included exactly once. All cards
+    #having any other value will result in the deck shuffling cards based on the accuracy of each card. Draw = 1
     #returns one random card based on the card accuracy, but only work if allCards is set to 0
 
-    #allCards<int/logical> [0,1]: 1 then the deck is shuffled such that all mCards are included at least once
-    #rndFlip<int> [0,1,2]: 0: all mCards facing front; 1: all mCards randomly flipped; 2: all mCards facing back
-    #n_cards determines how many mCards to shuffle
+    #allCards<int/logical> [0,1]: 1 then the deck is shuffled such that all cards are included at least once
+    #rndFlip<int> [0,1,2]: 0: all cards facing front; 1: all cards randomly flipped; 2: all cards facing back
+    #n_cards determines how many cards to shuffle
 
-    #set reset = 1 to reset deck in order with all mCards facing front
+    #set reset = 1 to reset deck in order with all cards facing front
      */
         //before shuffle begins, first reset all viewed stats
         //This was originally not a problem in Python ,but since Java passes objects
@@ -189,11 +192,15 @@ public class Deck implements Serializable {
             }
             a = 1 / a;
             card = card + 1;
-            double coeff = cards.get(card).timesStudied; //basically coeff the weight affecting the rate of appreance of mCards
+            double coeff = cards.get(card).timesStudied;
+            /*basically coeff is the weight affecting the rate of appreance of cards,
+            which is proportional to the times the card has been studied. We are going to
+            modify coefficent by a factor to control how frequent the user wants to see
+            the cards they fail at*/
             if (coeff == 0) {
-                coeff = 0.1; //to avoid div0 error, if the card has not been studied, set the weight tto 0
+                coeff = appearance_rate; //to avoid div0 error, if the card has not been studied, set the weight to 0
             } else {
-                coeff = coeff * 0.1;
+                coeff = coeff * appearance_rate;
             }
 
             a = a * coeff;

@@ -1,21 +1,16 @@
 package me.timgu.flashmemorize;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Build;
-import android.os.Environment;
 import android.provider.OpenableColumns;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +30,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -97,8 +91,16 @@ public class LocalDecksManager {
 
         while(scanner.hasNextLine()){
             line = scanner.nextLine();
+
+            if (line.length() == 0){
+                continue;
+            }
+
             indx = line.indexOf((char) 9);
 
+            if (indx < 0){
+                indx = line.length() - 1;
+            }
                 front = line.substring(0,indx);
 
                 File front_pic_file = null;
@@ -108,7 +110,9 @@ public class LocalDecksManager {
                     String file = front.substring(bracket1 + 1, bracket2);
                     front_pic_file = new File(parentFolder,file);
                 }
-            if (indx >=0){
+            if ((indx + 1) == line.length()){
+                indx = line.length();
+            }
                 File back_pic_file = null;
                 back = line.substring(indx+1);
                 bracket1 = back.indexOf("{");
@@ -123,7 +127,7 @@ public class LocalDecksManager {
 
                 all_cards.add(new Card(front,back,ID,front_pic_file,back_pic_file));
                 ID ++;
-            }
+
         }
         Deck dk = new Deck(name,all_cards);
         return dk;
@@ -231,8 +235,6 @@ public class LocalDecksManager {
     }
 
     public void addDeck(Uri uri) throws IOException, JSONException {
-        String deckName = getDeckName(uri);
-        String filename = generateFileName();
 
         Deck deck = getDeckFromURI(uri);
 

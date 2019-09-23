@@ -1,18 +1,15 @@
 package me.timgu.flashmemorize;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
-
-import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 public class ImageViewActivity extends AppCompatActivity {
 //Code inspired from https://medium.com/quick-code/pinch-to-zoom-with-multi-touch-gestures-in-android-d6392e4bf52d

@@ -43,6 +43,14 @@
                 app:showAsAction="ifRoom|withText">
 
             </item>
+            <item
+                android:id="@+id/menu_settings"
+                android:onClick = "LaunchSettings"
+                android:title="Settings"
+                app:showAsAction="ifRoom|withText">
+
+            </item>
+
 
 
         </menu>
