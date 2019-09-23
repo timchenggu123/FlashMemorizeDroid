@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.timgu.flashmemorize">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,22 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ImageViewActivity"/>
-        <activity android:name=".MergeListActivity" />
-
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/files_paths" />
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="me.timgu.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity">
             <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/files_paths" />
-        </provider>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.timgu.flashmemorize.MainActivity" />
+        </activity>
+        <activity android:name=".ImageViewActivity" />
+        <activity android:name=".MergeListActivity" />
 
         <activity
             android:name=".FlashcardActivity"
@@ -36,15 +28,32 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.timgu.flashmemorize.MainActivity" />
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/files_paths" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="me.timgu.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files_paths" />
+        </provider>
     </application>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

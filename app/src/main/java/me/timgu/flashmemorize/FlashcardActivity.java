@@ -10,11 +10,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
+
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -157,15 +159,17 @@ public class FlashcardActivity extends AppCompatActivity
             finish();
         } catch(Exception e){
             finish();
-        }finally {
-            finish();
         }
+
         mCards = mDeck.getDeck();
 
         //initialize
-        mCanvas.setTextSize(mSettingsManager.getFontSize());
+
         showCard();
         showDeckStats();
+        mCanvas.setTextSize(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,mSettingsManager.getFontSize(),
+                        getResources().getDisplayMetrics()));
     }
 
     @Override
@@ -343,7 +347,7 @@ public class FlashcardActivity extends AppCompatActivity
     }
 
     public void shuffleCardsSmartLearn(int n_cards){
-        mDeck.smartShuffle(n_cards);
+        mDeck.smartShuffle(n_cards, mSettingsManager.getAppearanceRate());
         mCards = mDeck.getDeck();
         mCurrentCard = 0;
         showCard();
@@ -406,25 +410,25 @@ public class FlashcardActivity extends AppCompatActivity
         }
 
         ImageButton closeButton =
-                (ImageButton) stats_popup.findViewById(R.id.flashcard_stats_popup_close);
+                stats_popup.findViewById(R.id.flashcard_stats_popup_close);
         TextView mTextView =
-                (TextView) stats_popup.findViewById(R.id.flashcard_stats_popup_text);
+                 stats_popup.findViewById(R.id.flashcard_stats_popup_text);
 
         String card_accuracy =
-                "Current Card Accuracy: "+String.valueOf((int)(mCards.get(mCurrentCard).getStats()
-                        * 100)) + "%";
+                "Current Card Accuracy: "+ (int)(mCards.get(mCurrentCard).getStats()
+                        * 100) + "%";
         String card_times_studied =
-                "Current Card Times Studied: "+String.valueOf(mCards.get(mCurrentCard).timesStudied);
+                "Current Card Times Studied: "+ mCards.get(mCurrentCard).timesStudied;
         String card_times_correct =
-                "Current Card Times Correct: "+String.valueOf(mCards.get(mCurrentCard).timesCorrect);
+                "Current Card Times Correct: "+mCards.get(mCurrentCard).timesCorrect;
         double[] deck_stats = mDeck.getDeckStats();
         String deck_accuracy =
-                "Deck Overall Accuracy: "+String.valueOf((int)(deck_stats[0] * 100)) + "%";
+                "Deck Overall Accuracy: "+(int)(deck_stats[0] * 100) + "%";
         String deck_total_studied  =
-                "Deck Total Times Studied: " + String.valueOf((int) deck_stats[1]);
+                "Deck Total Times Studied: " + (int) deck_stats[1];
         String deck_total_viewed =
-                "Unique Cards Viewed After Shuffle: "+String.valueOf((int) deck_stats[2])
-                        + "/" + String.valueOf(mDeck.getSize(false));
+                "Unique Cards Viewed After Shuffle: "+(int) deck_stats[2]
+                        + "/" + mDeck.getSize(false);
 
         String txt = card_accuracy + (char) 10
                 + card_times_correct + (char) 10
@@ -442,7 +446,7 @@ public class FlashcardActivity extends AppCompatActivity
             }
         });
 
-        ConstraintLayout parent = (ConstraintLayout) findViewById(R.id.flash_card_constraint);
+        ConstraintLayout parent = findViewById(R.id.flash_card_constraint);
         mStats_popupWindow.showAtLocation(parent, Gravity.CENTER,0,0);
 
     }
@@ -532,16 +536,18 @@ public class FlashcardActivity extends AppCompatActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData){
+                                 Intent resultData) {
 
         //for addPic method
-        if (requestCode == IMAGE_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        super.onActivityResult(requestCode, resultCode, resultData);
+
+        if (requestCode == IMAGE_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri uri = null;
-            if(resultData != null){
+            if (resultData != null) {
                 uri = resultData.getData();
 
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
                     mCards.get(mCurrentCard).addPic(bitmap);
 
                     new ApplyDeckChanges().execute();
@@ -551,13 +557,13 @@ public class FlashcardActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
             }
-        } else if (requestCode == MERGE_LIST_REQUEST_CODE && resultCode == RESULT_OK){
+        } else if (requestCode == MERGE_LIST_REQUEST_CODE && resultCode == RESULT_OK) {
 
             List<String> list = resultData.getStringArrayListExtra("Deck_List");
-            for (String deck: list) {
-                if (mDecksManager.getDeckList().getString(deck,"").equals(mCurrentFile)){
+            for (String deck : list) {
+                if (mDecksManager.getDeckList().getString(deck, "").equals(mCurrentFile)) {
                     continue;
-                }else {
+                } else {
                     Deck dk = null;
                     try {
                         dk = mDecksManager.loadDeck(mDecksManager.getDeckList().getString(deck, ""));
@@ -567,7 +573,7 @@ public class FlashcardActivity extends AppCompatActivity
                     Card card = mCards.get(mCurrentCard);
                     card.setId(dk.getSize());
                     dk.cards.add(card);
-                    dk.shuffle(0,1,0);
+                    dk.shuffle(0, 1, 0);
                     try {
                         mDecksManager.saveDeckToLocal(dk, mDecksManager.getDeckList().getString(deck, ""));
                     } catch (IOException e) {

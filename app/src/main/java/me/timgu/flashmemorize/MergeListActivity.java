@@ -1,16 +1,14 @@
 package me.timgu.flashmemorize;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

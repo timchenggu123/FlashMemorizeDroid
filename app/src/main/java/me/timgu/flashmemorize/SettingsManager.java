@@ -4,19 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
 
+import androidx.preference.PreferenceManager;
+
 public class SettingsManager {
     private Context mContext;
-    private String mSettingsFile = "me.timgu.settings";
     private SharedPreferences mSettings;
 
 
     //Here contains a list of modifiable default vals
-    private int DEFAULT_FONT_SIZE = 8;
+    private String DEFAULT_FONT_SIZE = "8";
 
 
     public SettingsManager(Context context){
         mContext = context;
-        mSettings = mContext.getSharedPreferences(mSettingsFile,Context.MODE_PRIVATE);
+        mSettings = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
 
@@ -35,6 +36,10 @@ public class SettingsManager {
     }
 
     public int getFontSize(){
-        return mSettings.getInt("font_size", DEFAULT_FONT_SIZE);
+        return Integer.valueOf(mSettings.getString("font_size",DEFAULT_FONT_SIZE));
+    }
+
+    public double getAppearanceRate(){
+        return Double.valueOf(mSettings.getString("card_appearance_rate", "0.1"));
     }
 }
