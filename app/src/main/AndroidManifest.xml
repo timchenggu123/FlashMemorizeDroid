@@ -40,9 +40,9 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/files_paths" />
+<!--        <meta-data
+           &lt;!&ndash; android:name="com.google.android.actions"&ndash;&gt;
+            android:resource="@xml/files_paths" />-->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="me.timgu.fileprovider"

@@ -44,7 +44,6 @@ public class FlashcardActivity extends AppCompatActivity
 
     //Views
     private TextView mCanvas;
-    private TextView mFlip;
     private TextView mId_display;
     private TextView mTotal_cards_display;
     private TextView mSide_display;
@@ -85,7 +84,6 @@ public class FlashcardActivity extends AppCompatActivity
 
         //Views in normal mode initializing views
         mCanvas = findViewById(R.id.flashcard_text_canvas);
-        mFlip = findViewById(R.id.flashcard_text_flip);
         mText_edit = findViewById(R.id.flashcard_text_edit);
         mId_display = findViewById(R.id.flashcard_display_id_value);
         mTotal_cards_display = findViewById(R.id.flashcard_display_totalcards_value);
@@ -103,6 +101,18 @@ public class FlashcardActivity extends AppCompatActivity
         mButton_cancel.setVisibility(View.GONE);
         mButton_done.setVisibility(View.GONE);
 
+        findViewById(R.id.flashcard_scroll_view).setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
+            public void onSwipeRight() {
+                prevCard();
+            }
+            public void onSwipeLeft() {
+                nextCard();
+            }
+            public void onTwoTaps() {
+                flipCard();
+            }
+        });
+
         mCanvas.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
@@ -114,17 +124,8 @@ public class FlashcardActivity extends AppCompatActivity
                 flipCard();
             }
         });
-        mFlip.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
-            public void onSwipeRight() {
-                prevCard();
-            }
-            public void onSwipeLeft() {
-                nextCard();
-            }
-            public void onTwoTaps() {
-                flipCard();
-            }
-        });
+
+
         mImage_display.setOnTouchListener(new OnSwipeTouchListener(FlashcardActivity.this) {
             public void onSwipeRight() {
                 prevCard();
