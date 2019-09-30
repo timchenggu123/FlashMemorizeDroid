@@ -79,6 +79,8 @@ public class LocalDecksManager {
     }
 
     public Deck readTxtDeck(String deck,String name, File parentFolder){
+        SettingsManager sm = new SettingsManager(context);
+        String SIDE_KEY = sm.getSideKey();
         Scanner scanner = new Scanner(deck);
         String line;
         int indx;
@@ -90,13 +92,15 @@ public class LocalDecksManager {
 
 
         while(scanner.hasNextLine()){
+
+
             line = scanner.nextLine();
 
             if (line.length() == 0){
                 continue;
             }
 
-            indx = line.indexOf((char) 9);
+            indx = line.indexOf(SIDE_KEY);
 
             if (indx < 0){
                 indx = line.length() - 1;
@@ -110,18 +114,21 @@ public class LocalDecksManager {
                     String file = front.substring(bracket1 + 1, bracket2);
                     front_pic_file = new File(parentFolder,file);
                 }
-            if ((indx + 1) == line.length()){
-                indx = line.length();
-            }
-                File back_pic_file = null;
-                back = line.substring(indx+1);
+
+            File back_pic_file = null;
+            if ((indx + 1) != line.length()) {
+
+
+                back = line.substring(indx + 1);
                 bracket1 = back.indexOf("{");
                 bracket2 = back.indexOf("}");
-                if (bracket1 >= 0 && bracket2 >= 0){
+                if (bracket1 >= 0 && bracket2 >= 0) {
                     String file = back.substring(bracket1 + 1, bracket2);
-                    back_pic_file = new File(parentFolder,file);
+                    back_pic_file = new File(parentFolder, file);
                 }
-
+            }else{
+                back = "";
+            }
                 //front = front.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10)); //will this work?
                 //back = back.replaceAll(getString(R.string.new_line_keyword), Character.toString((char) 10)); //will this work?
 

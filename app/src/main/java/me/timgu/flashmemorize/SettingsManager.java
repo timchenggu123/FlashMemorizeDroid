@@ -42,4 +42,16 @@ public class SettingsManager {
     public double getAppearanceRate(){
         return Double.valueOf(mSettings.getString("card_appearance_rate", "0.1"));
     }
+
+    public Boolean getUsingFourSpaces(){
+        return mSettings.getBoolean("use_four_spaces",false);
+    }
+
+    public String getSideKey(){
+        if (getUsingFourSpaces()){
+            return "    ";
+        }else{
+            return String.valueOf((char) 9);
+        }
+    }
 }

@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="Appearance">
 
@@ -39,6 +40,14 @@
             app:useSimpleSummaryProvider="true" />
 
 
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Import (.txt .zip)">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="use_four_spaces"
+            android:title="Use 4 spaces instead of tabs"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
