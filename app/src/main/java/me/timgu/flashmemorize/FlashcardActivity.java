@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlashcardActivity extends AppCompatActivity
@@ -63,7 +65,7 @@ public class FlashcardActivity extends AppCompatActivity
     private LocalDecksManager mDecksManager;
     private SettingsManager mSettingsManager;
     private String mFilename;
-
+    private SharedPreferences mBookMarkManager;
     private boolean editMode = false;
 
     private int IMAGE_SEARCH_REQUEST_CODE = 6937;
@@ -153,6 +155,7 @@ public class FlashcardActivity extends AppCompatActivity
         //initializing LocalDecksManager
         mSettingsManager = new SettingsManager(this);
         mDecksManager = new LocalDecksManager(this);
+        mBookMarkManager = getSharedPreferences(mFilename,MODE_PRIVATE);
         try {
             mDeck = mDecksManager.loadDeck(mFilename);
         } catch (FileNotFoundException e) {
@@ -163,6 +166,7 @@ public class FlashcardActivity extends AppCompatActivity
         }
 
         mCards = mDeck.getDeck();
+        mCurrentCard = mBookMarkManager.getInt("current_card",0);
 
         //initialize
 
@@ -182,7 +186,7 @@ public class FlashcardActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-
+        mBookMarkManager.edit().putInt("current_card",mCurrentCard).apply();
     }
 
 
@@ -334,23 +338,27 @@ public class FlashcardActivity extends AppCompatActivity
         showCard();
     }
 
+
     public void shuffleCardsNoRepeat(MenuItem item) {
         //needs more work
         mDeck.shuffle(1, 0, 0);
         mCards = mDeck.getDeck();
         mCurrentCard = 0;
         showCard();
+        new ApplyDeckChanges().execute();
     }
 
     public void shuffleCardsSmartLearn(MenuItem item) {
         DialogFragment dialog = new FlashcardDialogFragment();
         dialog.show(getSupportFragmentManager(),"flashcard_dialog");
+        new ApplyDeckChanges().execute();
     }
 
     public void shuffleCardsSmartLearn(int n_cards){
         mDeck.smartShuffle(n_cards, mSettingsManager.getAppearanceRate());
         mCards = mDeck.getDeck();
         mCurrentCard = 0;
+        new ApplyDeckChanges().execute();
         showCard();
     }
 
@@ -371,6 +379,7 @@ public class FlashcardActivity extends AppCompatActivity
         mDeck.randomFlip();
         mCards = mDeck.getDeck();
         //mCurrentCard = 0; //This a removed for improved user experience
+        new ApplyDeckChanges().execute();
         showCard();
     }
 
@@ -378,6 +387,7 @@ public class FlashcardActivity extends AppCompatActivity
         mDeck.randomFlip(0);
         mCards = mDeck.getDeck();
         //mCurrentCard = 0; //This is removed for improved user experience
+        new ApplyDeckChanges().execute();
         showCard();
     }
 
@@ -385,6 +395,7 @@ public class FlashcardActivity extends AppCompatActivity
         mDeck.randomFlip(2);
         mCards = mDeck.getDeck();
         mCurrentCard = 0;
+        new ApplyDeckChanges().execute();
         showCard();
     }
 
@@ -392,6 +403,7 @@ public class FlashcardActivity extends AppCompatActivity
         mDeck.shuffle(0, 1, 0);
         mCards = mDeck.getDeck();
         mCurrentCard = 0;
+        new ApplyDeckChanges().execute();
         showCard();
     }
 

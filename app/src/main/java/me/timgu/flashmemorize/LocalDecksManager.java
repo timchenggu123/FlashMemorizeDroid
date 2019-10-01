@@ -211,10 +211,25 @@ public class LocalDecksManager {
 
     public void saveDeckToLocalJson(Deck deck, String filename) throws IOException{
         //this saves the object to local as a json object.
-        Writer output = null;
+
         try {
             OutputStreamWriter outputStreamWriter =
                     new OutputStreamWriter(context.openFileOutput(filename, Context.MODE_PRIVATE));
+            outputStreamWriter.write(deck.onSave().toString());
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveDeckToCacheJSON(Deck deck, String filename) throws IOException{
+        //this saves the object to local as a json object.
+        File file = new File(context.getCacheDir(),filename);
+        FileOutputStream fos = new FileOutputStream(file);
+        try {
+            OutputStreamWriter outputStreamWriter =
+                    new OutputStreamWriter(fos);
             outputStreamWriter.write(deck.onSave().toString());
             outputStreamWriter.close();
         }
@@ -396,10 +411,11 @@ public class LocalDecksManager {
     }
 
     public void exportDeck(String deckName) throws IOException {
+        clearCache();
         Deck dk = loadDeck(getDeckList().getString(deckName,""));
         String tempFilename = deckName + ".json";
-        saveDeckToLocalJson(dk,tempFilename);
-        File dir = context.getFilesDir();
+        saveDeckToCacheJSON(dk,tempFilename);
+        File dir = context.getCacheDir();
         final File file = new File(dir, tempFilename);
         shareFile(file);
     }
@@ -411,7 +427,6 @@ public class LocalDecksManager {
 
         intentShareFile.setType("application/json");
         Uri contentUri = FileProvider.getUriForFile(context, "me.timgu.fileprovider",file);
-
         intentShareFile.putExtra(Intent.EXTRA_STREAM,
                contentUri);
         intentShareFile.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
