@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +32,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -99,6 +99,9 @@ public class LocalDecksManager {
             indx = line.indexOf((char) 9);
 
             if (indx < 0){
+                indx = line.indexOf('|');
+            }
+            if (indx < 0){
                 indx = line.length() - 1;
             }
                 front = line.substring(0,indx);
@@ -111,7 +114,7 @@ public class LocalDecksManager {
                     front_pic_file = new File(parentFolder,file);
                 }
             if ((indx + 1) == line.length()){
-                indx = line.length();
+                indx = line.length()-2;
             }
                 File back_pic_file = null;
                 back = line.substring(indx+1);
@@ -216,29 +219,35 @@ public class LocalDecksManager {
         }
     }
 
-    public Deck getDeckFromURI(Uri uri) throws IOException, JSONException {
+    public List<Deck> getDecksFromURI(Uri uri) throws IOException, JSONException {
         String deckName = getDeckName(uri);
 
-        Deck deck = null;
-        if (deckName.substring(deckName.length() -4).equals(".txt")) {
+        List<Deck> decks = new LinkedList<>();
+        String ext = deckName.substring(deckName.length() - 4);
+        if (ext.equals(".txt")) {
+
             String textDeck = uri2Text(uri);
-            deck = readTxtDeck(textDeck, deckName, uri);
-        } else if (deckName.substring(deckName.length() - 5).equals(".json"))
-        {
-            deck = loadJsonDeck(uri);
-        } else if (deckName.substring(deckName.length() - 4).equals(".zip")){
-            deck = loadZipDeck(uri);
+            Deck deck = readTxtDeck(textDeck, deckName, uri);
+            decks.add(deck);
+        } else if (deckName.substring(deckName.length() - 5).equals(".json")) {
+            Deck deck = loadJsonDeck(uri);
+            decks.add(deck);
+        } else if (ext.equals(".zip")) {
+            decks = loadZipDecks(uri);
             //delete cache
             clearCache();
         }
-        return deck;
+        return decks;
     }
 
-    public void addDeck(Uri uri) throws IOException, JSONException {
+    public void addDecks(Uri uri) throws IOException, JSONException {
 
-        Deck deck = getDeckFromURI(uri);
+        List<Deck> decks = getDecksFromURI(uri);
 
-        addDeck(deck);
+        for (Deck deck: decks){
+            addDeck(deck);
+        }
+
     }
 
     public void addDeck(Deck deck) throws IOException {
@@ -374,18 +383,24 @@ public class LocalDecksManager {
     }
 
 
-    public Deck loadZipDeck(Uri uri) throws IOException {
+    public List<Deck> loadZipDecks(Uri uri) throws IOException {
         String folderName = generateFileName();
 
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         ZipHandler zh = new ZipHandler(inputStream,folderName,context);
         zh.unzip();
 
-
+        List<Deck> decks =  new LinkedList<Deck>();
         String filename = getDeckName(uri);
-        filename = filename.substring(0,filename.length()-4) + ".txt";
-        File file = new File(context.getCacheDir(),filename);
-        return readTxtDeck(file2txt(file),getDeckName(uri),context.getCacheDir());
+        File[] files = context.getCacheDir().listFiles();
+        for (File f: files){
+            String fname = f.getName();
+            if (fname.substring(fname.lastIndexOf(".") + 1).equals("txt")){
+                File file = new File(context.getCacheDir(),fname);
+                decks.add(readTxtDeck(file2txt(file),getDeckName(uri)+"_"+fname,context.getCacheDir()));
+            }
+        }
+        return decks;
     }
 
     public void exportDeck(String deckName) throws IOException {

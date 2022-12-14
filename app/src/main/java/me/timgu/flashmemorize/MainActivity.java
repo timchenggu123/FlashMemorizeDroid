@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
             for (Uri u: uri){
                 try {
-                    mDecksManager.addDeck(u);
+                    mDecksManager.addDecks(u);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
